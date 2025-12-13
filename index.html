@@ -21,15 +21,13 @@
         }
 
         :root {
-            --primary: #4F46E5;
-            --primary-light: #6366F1;
-            --primary-dark: #4338CA;
-            --secondary: #EC4899;
+            --primary: #DC143C;
+            --primary-light: #FF6B6B;
+            --primary-dark: #B01030;
+            --secondary: #FFE5E5;
             --success: #10B981;
             --warning: #F59E0B;
-            --danger: #EF4444;
-            --dark: #1F2937;
-            --light: #F9FAFB;
+            --danger: #DC143C;
             --white: #FFFFFF;
             --gray-50: #F9FAFB;
             --gray-100: #F3F4F6;
@@ -45,26 +43,20 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFFFFF 50%, #FFE5E5 100%);
             min-height: 100vh;
             color: var(--gray-800);
         }
 
-        /* Glassmorphism styles */
-        .glass {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        /* Clean white card style */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
 
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         /* Login Page */
@@ -80,47 +72,24 @@
             width: 100%;
             max-width: 420px;
             padding: 40px;
-            border-radius: 20px;
         }
 
         .login-logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
 
         .login-logo h1 {
-            color: var(--white);
-            font-size: 32px;
+            color: var(--primary);
+            font-size: 36px;
             font-weight: 700;
             margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: -0.5px;
         }
 
         .login-logo p {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--gray-600);
             font-size: 14px;
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            color: var(--gray-500);
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .password-toggle:hover {
-            color: var(--gray-700);
         }
 
         .form-group {
@@ -139,26 +108,65 @@
             width: 100%;
             padding: 12px 16px;
             border: 1px solid var(--gray-300);
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: all 0.2s;
             background: var(--white);
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
         }
 
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--gray-400);
+        }
+
+        .password-toggle:hover {
+            color: var(--gray-600);
+        }
+
+        /* SVG Icons */
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-lg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Buttons */
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -173,8 +181,8 @@
 
         .btn-primary:hover {
             background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.25);
         }
 
         .btn-primary:disabled {
@@ -184,12 +192,12 @@
         }
 
         .btn-secondary {
-            background: var(--gray-200);
+            background: var(--gray-100);
             color: var(--gray-700);
         }
 
         .btn-secondary:hover {
-            background: var(--gray-300);
+            background: var(--gray-200);
         }
 
         .btn-success {
@@ -207,7 +215,7 @@
         }
 
         .btn-danger:hover {
-            background: #DC2626;
+            background: var(--primary-dark);
         }
 
         .btn-sm {
@@ -215,32 +223,47 @@
             font-size: 13px;
         }
 
+        .btn-icon {
+            padding: 8px;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--gray-600);
+        }
+
+        .btn-icon:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
         /* Dashboard Layout */
         .dashboard {
             display: flex;
             height: 100vh;
+            background: var(--gray-50);
         }
 
         .sidebar {
             width: 260px;
+            background: var(--white);
+            border-right: 1px solid var(--gray-200);
             padding: 20px;
-            border-right: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .sidebar-header {
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid var(--gray-200);
         }
 
         .sidebar-header h2 {
-            color: var(--white);
+            color: var(--primary);
             font-size: 24px;
             margin-bottom: 4px;
+            font-weight: 700;
         }
 
         .sidebar-header p {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--gray-600);
             font-size: 13px;
         }
 
@@ -249,53 +272,54 @@
         }
 
         .nav-item {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 16px;
-            color: rgba(255, 255, 255, 0.9);
+            padding: 10px 12px;
+            color: var(--gray-700);
             text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s;
+            border-radius: 8px;
+            transition: all 0.2s;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--gray-50);
+            color: var(--primary);
         }
 
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.3);
-            color: var(--white);
+            background: var(--secondary);
+            color: var(--primary);
         }
 
         .user-info {
             margin-top: auto;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid var(--gray-200);
         }
 
         .user-card {
             padding: 12px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            background: var(--gray-50);
         }
 
         .user-card-name {
-            color: var(--white);
+            color: var(--gray-900);
             font-weight: 600;
             font-size: 14px;
             margin-bottom: 4px;
         }
 
         .user-card-role {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--gray-600);
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -318,13 +342,16 @@
         .page-title {
             font-size: 28px;
             font-weight: 700;
-            color: var(--white);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            color: var(--gray-900);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
         }
 
         .content-card {
             padding: 24px;
-            border-radius: 16px;
             margin-bottom: 20px;
         }
 
@@ -338,24 +365,22 @@
 
         .stat-card {
             padding: 20px;
-            border-radius: 16px;
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
         .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
         }
 
         .stat-icon.primary {
-            background: rgba(79, 70, 229, 0.1);
+            background: var(--secondary);
             color: var(--primary);
         }
 
@@ -369,15 +394,10 @@
             color: var(--warning);
         }
 
-        .stat-icon.danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
         .stat-content h3 {
             font-size: 28px;
             font-weight: 700;
-            color: var(--gray-800);
+            color: var(--gray-900);
             margin-bottom: 4px;
         }
 
@@ -390,7 +410,8 @@
         /* Table */
         .table-container {
             overflow-x: auto;
-            border-radius: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
         }
 
         table {
@@ -399,45 +420,50 @@
         }
 
         thead {
-            background: rgba(79, 70, 229, 0.05);
+            background: var(--gray-50);
         }
 
         th {
-            padding: 14px 16px;
+            padding: 12px 16px;
             text-align: left;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--gray-700);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--gray-200);
         }
 
         td {
-            padding: 14px 16px;
-            border-top: 1px solid var(--gray-200);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
             font-size: 14px;
             color: var(--gray-700);
         }
 
         tbody tr:hover {
-            background: rgba(79, 70, 229, 0.02);
+            background: var(--gray-50);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
         }
 
         /* Badge */
         .badge {
             display: inline-block;
             padding: 4px 12px;
-            border-radius: 20px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 600;
             text-transform: capitalize;
         }
 
-        .badge-new { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+        .badge-new { background: rgba(220, 20, 60, 0.1); color: var(--primary); }
         .badge-contacted { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
         .badge-qualified { background: rgba(16, 185, 129, 0.1); color: var(--success); }
         .badge-won { background: rgba(34, 197, 94, 0.1); color: #22C55E; }
-        .badge-lost { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .badge-lost { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
 
         /* Modal */
         .modal-overlay {
@@ -459,8 +485,9 @@
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            border-radius: 20px;
+            border-radius: 12px;
             padding: 30px;
+            background: var(--white);
         }
 
         .modal-header {
@@ -471,16 +498,16 @@
         }
 
         .modal-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            color: var(--gray-800);
+            color: var(--gray-900);
         }
 
         .close-btn {
             background: none;
             border: none;
             font-size: 24px;
-            color: var(--gray-500);
+            color: var(--gray-400);
             cursor: pointer;
             padding: 0;
             width: 32px;
@@ -488,8 +515,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            transition: all 0.3s;
+            border-radius: 6px;
+            transition: all 0.2s;
         }
 
         .close-btn:hover {
@@ -517,13 +544,15 @@
 
         .toast {
             padding: 16px 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             gap: 12px;
-            min-width: 300px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            min-width: 320px;
+            background: var(--white);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             animation: slideIn 0.3s ease-out;
+            border-left: 4px solid;
         }
 
         @keyframes slideIn {
@@ -538,28 +567,31 @@
         }
 
         .toast-success {
-            background: var(--success);
-            color: var(--white);
+            border-left-color: var(--success);
         }
 
         .toast-error {
-            background: var(--danger);
-            color: var(--white);
+            border-left-color: var(--danger);
         }
 
         .toast-info {
-            background: var(--primary);
-            color: var(--white);
+            border-left-color: var(--primary);
         }
 
         .toast-icon {
-            font-size: 20px;
+            width: 20px;
+            height: 20px;
         }
+
+        .toast-icon.success { color: var(--success); }
+        .toast-icon.error { color: var(--danger); }
+        .toast-icon.info { color: var(--primary); }
 
         .toast-message {
             flex: 1;
             font-size: 14px;
             font-weight: 500;
+            color: var(--gray-900);
         }
 
         /* Chart Container */
@@ -567,27 +599,6 @@
             position: relative;
             height: 300px;
             margin-top: 20px;
-        }
-
-        /* Action buttons */
-        .action-btns {
-            display: flex;
-            gap: 8px;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            color: var(--gray-600);
-            transition: all 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: var(--gray-100);
-            color: var(--primary);
         }
 
         /* Search and Filter */
@@ -603,7 +614,7 @@
             min-width: 250px;
             padding: 10px 16px;
             border: 1px solid var(--gray-300);
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 14px;
             background: var(--white);
         }
@@ -614,7 +625,7 @@
 
         /* Loading Spinner */
         .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid var(--gray-200);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
             width: 40px;
@@ -628,20 +639,10 @@
             100% { transform: rotate(360deg); }
         }
 
-        .text-center {
-            text-align: center;
-        }
-
         .empty-state {
             text-align: center;
             padding: 60px 20px;
             color: var(--gray-500);
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
         }
 
         .empty-state-text {
@@ -655,6 +656,49 @@
             color: var(--gray-500);
         }
 
+        /* Image Upload */
+        .image-upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-upload-area:hover {
+            border-color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .image-upload-area.has-image {
+            border-style: solid;
+            border-color: var(--primary);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-error {
+            background: rgba(220, 20, 60, 0.1);
+            color: var(--primary-dark);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .dashboard {
@@ -664,7 +708,7 @@
             .sidebar {
                 width: 100%;
                 border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                border-bottom: 1px solid var(--gray-200);
             }
 
             .stats-grid {
@@ -694,9 +738,89 @@
         const { useState, useEffect } = React;
 
         // ==================== CONFIGURATION ====================
-        // 🔧 PASTE YOUR APPS SCRIPT WEB APP URL HERE
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZBjZvRFKMYovqgKA9TKMalZ5DSnsdIr6WmsgfSbHXMYkLriQ5johO8nn0dqTzNL7mRA/exec';
         
+        // ==================== SVG ICONS ====================
+        const Icons = {
+            Eye: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            ),
+            EyeOff: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+            ),
+            Dashboard: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            ),
+            Users: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            ),
+            Settings: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            ),
+            Edit: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+            ),
+            Plus: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+            ),
+            Refresh: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            ),
+            CheckCircle: () => (
+                <svg className="icon toast-icon success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ),
+            XCircle: () => (
+                <svg className="icon toast-icon error" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ),
+            InfoCircle: () => (
+                <svg className="icon toast-icon info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ),
+            Upload: () => (
+                <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+            ),
+            ChartBar: () => (
+                <svg className="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+            ),
+            TrendingUp: () => (
+                <svg className="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+            ),
+            Star: () => (
+                <svg className="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+            ),
+        };
+
         // ==================== API SERVICE ====================
         class AppsScriptAPI {
             constructor(baseUrl) {
@@ -730,7 +854,7 @@
                     return data;
                 } catch (error) {
                     if (error.message.includes('Failed to fetch')) {
-                        throw new Error('Unable to connect to server. Please check:\n1. Apps Script URL is correct\n2. Script is deployed as Web App\n3. Access is set to "Anyone"');
+                        throw new Error('Unable to connect to server');
                     }
                     throw error;
                 }
@@ -759,7 +883,7 @@
                     return result;
                 } catch (error) {
                     if (error.message.includes('Failed to fetch')) {
-                        throw new Error('Unable to connect to server. Please check your Apps Script deployment.');
+                        throw new Error('Unable to connect to server');
                     }
                     throw error;
                 }
@@ -791,25 +915,24 @@
         // ==================== TOAST COMPONENT ====================
         const Toast = ({ message, type, onClose }) => {
             useEffect(() => {
-                const timer = setTimeout(onClose, 3000);
+                const timer = setTimeout(onClose, 4000);
                 return () => clearTimeout(timer);
             }, [onClose]);
 
-            const icons = {
-                success: '✓',
-                error: '✕',
-                info: 'ℹ'
+            const iconMap = {
+                success: <Icons.CheckCircle />,
+                error: <Icons.XCircle />,
+                info: <Icons.InfoCircle />
             };
 
             return (
                 <div className={`toast toast-${type}`}>
-                    <span className="toast-icon">{icons[type]}</span>
+                    {iconMap[type]}
                     <span className="toast-message">{message}</span>
                 </div>
             );
         };
 
-        // ==================== TOAST CONTAINER ====================
         const ToastContainer = ({ toasts, removeToast }) => {
             return (
                 <div className="toast-container">
@@ -840,12 +963,10 @@
 
                 try {
                     const result = await api.authenticate(username, password);
-                    
                     localStorage.setItem('currentUser', JSON.stringify(result.user));
                     onLogin(result.user);
                 } catch (err) {
-                    setError(err.message || 'Failed to login. Please check your credentials.');
-                    console.error(err);
+                    setError(err.message || 'Invalid credentials');
                 } finally {
                     setLoading(false);
                 }
@@ -853,7 +974,7 @@
 
             return (
                 <div className="login-container">
-                    <div className="login-box glass-strong">
+                    <div className="login-box card card-elevated">
                         <div className="login-logo">
                             <h1>Darex Systems</h1>
                             <p>Lead Management Platform</p>
@@ -867,7 +988,7 @@
                                     className="form-input"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Enter your username"
+                                    placeholder="Enter username"
                                     required
                                 />
                             </div>
@@ -880,7 +1001,7 @@
                                         className="form-input"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Enter your password"
+                                        placeholder="Enter password"
                                         required
                                         style={{ paddingRight: '40px' }}
                                     />
@@ -888,15 +1009,15 @@
                                         type="button"
                                         className="password-toggle"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        title={showPassword ? "Hide password" : "Show password"}
                                     >
-                                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                                        {showPassword ? <Icons.EyeOff /> : <Icons.Eye />}
                                     </button>
                                 </div>
                             </div>
 
                             {error && (
-                                <div style={{ color: 'var(--danger)', fontSize: '14px', marginBottom: '16px', padding: '12px', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px' }}>
+                                <div className="alert alert-error">
+                                    <Icons.XCircle />
                                     {error}
                                 </div>
                             )}
@@ -905,12 +1026,6 @@
                                 {loading ? 'Signing in...' : 'Sign In'}
                             </button>
                         </form>
-
-                        <div style={{ marginTop: '20px', fontSize: '13px', color: 'var(--gray-600)', textAlign: 'center' }}>
-                            <p>Default credentials:</p>
-                            <p>Admin: admin / admin123</p>
-                            <p>Agent: agent / agent123</p>
-                        </div>
                     </div>
                 </div>
             );
@@ -935,7 +1050,6 @@
                         api.getConfig()
                     ]);
 
-                    // Filter leads for agents
                     const filteredLeads = user.role === 'agent'
                         ? leadsResult.leads.filter(lead => lead.assignee === user.fullName)
                         : leadsResult.leads;
@@ -943,8 +1057,7 @@
                     setLeads(filteredLeads);
                     setFormFields(configResult.config);
                 } catch (error) {
-                    showToast('Failed to load data: ' + error.message, 'error');
-                    console.error(error);
+                    showToast(error.message, 'error');
                 } finally {
                     setLoading(false);
                 }
@@ -968,7 +1081,7 @@
             };
 
             return (
-                <div className="dashboard glass">
+                <div className="dashboard">
                     <div className="sidebar">
                         <div className="sidebar-header">
                             <h2>Darex Systems</h2>
@@ -977,28 +1090,22 @@
 
                         <ul className="nav-menu">
                             <li className="nav-item">
-                                <div
-                                    className={`nav-link ${activeTab === 'dashboard' ? 'active' : ''}`}
-                                    onClick={() => setActiveTab('dashboard')}
-                                >
-                                    📊 Dashboard
+                                <div className={`nav-link ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+                                    <Icons.Dashboard />
+                                    Dashboard
                                 </div>
                             </li>
                             <li className="nav-item">
-                                <div
-                                    className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`}
-                                    onClick={() => setActiveTab('leads')}
-                                >
-                                    👥 Leads
+                                <div className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`} onClick={() => setActiveTab('leads')}>
+                                    <Icons.Users />
+                                    Leads
                                 </div>
                             </li>
                             {user.role === 'admin' && (
                                 <li className="nav-item">
-                                    <div
-                                        className={`nav-link ${activeTab === 'config' ? 'active' : ''}`}
-                                        onClick={() => setActiveTab('config')}
-                                    >
-                                        ⚙️ Configuration
+                                    <div className={`nav-link ${activeTab === 'config' ? 'active' : ''}`} onClick={() => setActiveTab('config')}>
+                                        <Icons.Settings />
+                                        Configuration
                                     </div>
                                 </li>
                             )}
@@ -1023,7 +1130,7 @@
         };
 
         // ==================== DASHBOARD VIEW ====================
-        const DashboardView = ({ leads, user }) => {
+        const DashboardView = ({ leads }) => {
             const stats = {
                 total: leads.length,
                 new: leads.filter(l => l.status === 'New').length,
@@ -1032,12 +1139,10 @@
             };
 
             useEffect(() => {
-                // Create charts
                 const ctx1 = document.getElementById('statusChart');
                 const ctx2 = document.getElementById('sourceChart');
 
                 if (ctx1 && ctx2) {
-                    // Status Chart
                     new Chart(ctx1, {
                         type: 'doughnut',
                         data: {
@@ -1050,7 +1155,7 @@
                                     leads.filter(l => l.status === 'Won').length,
                                     leads.filter(l => l.status === 'Lost').length
                                 ],
-                                backgroundColor: ['#4F46E5', '#3B82F6', '#10B981', '#22C55E', '#EF4444']
+                                backgroundColor: ['#DC143C', '#3B82F6', '#10B981', '#22C55E', '#EF4444']
                             }]
                         },
                         options: {
@@ -1064,7 +1169,6 @@
                         }
                     });
 
-                    // Source Chart
                     const sources = {};
                     leads.forEach(lead => {
                         const source = lead.source || 'Unknown';
@@ -1078,7 +1182,7 @@
                             datasets: [{
                                 label: 'Leads by Source',
                                 data: Object.values(sources),
-                                backgroundColor: '#4F46E5'
+                                backgroundColor: '#DC143C'
                             }]
                         },
                         options: {
@@ -1101,32 +1205,40 @@
                     </div>
 
                     <div className="stats-grid">
-                        <div className="stat-card glass-strong">
-                            <div className="stat-icon primary">📊</div>
+                        <div className="stat-card card">
+                            <div className="stat-icon primary">
+                                <Icons.ChartBar />
+                            </div>
                             <div className="stat-content">
                                 <h3>{stats.total}</h3>
                                 <p>Total Leads</p>
                             </div>
                         </div>
 
-                        <div className="stat-card glass-strong">
-                            <div className="stat-icon warning">🆕</div>
+                        <div className="stat-card card">
+                            <div className="stat-icon primary">
+                                <Icons.TrendingUp />
+                            </div>
                             <div className="stat-content">
                                 <h3>{stats.new}</h3>
                                 <p>New Leads</p>
                             </div>
                         </div>
 
-                        <div className="stat-card glass-strong">
-                            <div className="stat-icon success">✓</div>
+                        <div className="stat-card card">
+                            <div className="stat-icon success">
+                                <Icons.CheckCircle />
+                            </div>
                             <div className="stat-content">
                                 <h3>{stats.qualified}</h3>
                                 <p>Qualified</p>
                             </div>
                         </div>
 
-                        <div className="stat-card glass-strong">
-                            <div className="stat-icon success">🏆</div>
+                        <div className="stat-card card">
+                            <div className="stat-icon success">
+                                <Icons.Star />
+                            </div>
                             <div className="stat-content">
                                 <h3>{stats.won}</h3>
                                 <p>Won</p>
@@ -1135,15 +1247,15 @@
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                        <div className="content-card glass-strong">
-                            <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: '600' }}>Leads by Status</h3>
+                        <div className="content-card card">
+                            <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>Leads by Status</h3>
                             <div className="chart-container">
                                 <canvas id="statusChart"></canvas>
                             </div>
                         </div>
 
-                        <div className="content-card glass-strong">
-                            <h3 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: '600' }}>Leads by Source</h3>
+                        <div className="content-card card">
+                            <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>Leads by Source</h3>
                             <div className="chart-container">
                                 <canvas id="sourceChart"></canvas>
                             </div>
@@ -1159,6 +1271,7 @@
             const [editingLead, setEditingLead] = useState(null);
             const [searchTerm, setSearchTerm] = useState('');
             const [statusFilter, setStatusFilter] = useState('All');
+            const [refreshing, setRefreshing] = useState(false);
 
             const filteredLeads = leads.filter(lead => {
                 const matchesSearch = lead.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -1168,26 +1281,35 @@
                 return matchesSearch && matchesStatus;
             });
 
-            const handleAddLead = () => {
-                setEditingLead(null);
-                setShowModal(true);
-            };
-
-            const handleEditLead = (lead) => {
-                setEditingLead(lead);
-                setShowModal(true);
+            const handleRefresh = async () => {
+                setRefreshing(true);
+                try {
+                    await onRefresh();
+                    showToast('Data refreshed successfully', 'success');
+                } catch (error) {
+                    showToast('Failed to refresh data', 'error');
+                } finally {
+                    setRefreshing(false);
+                }
             };
 
             return (
                 <>
                     <div className="page-header">
                         <h1 className="page-title">Leads Management</h1>
-                        <button className="btn btn-primary" onClick={handleAddLead}>
-                            + Add New Lead
-                        </button>
+                        <div className="header-actions">
+                            <button className="btn btn-secondary btn-sm" onClick={handleRefresh} disabled={refreshing}>
+                                <Icons.Refresh />
+                                {refreshing ? 'Refreshing...' : 'Refresh'}
+                            </button>
+                            <button className="btn btn-primary btn-sm" onClick={() => { setEditingLead(null); setShowModal(true); }}>
+                                <Icons.Plus />
+                                Add Lead
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="content-card glass-strong">
+                    <div className="content-card card">
                         <div className="search-filter-bar">
                             <input
                                 type="text"
@@ -1214,7 +1336,6 @@
                         <div className="table-container">
                             {filteredLeads.length === 0 ? (
                                 <div className="empty-state">
-                                    <div className="empty-state-icon">📭</div>
                                     <div className="empty-state-text">No leads found</div>
                                     <div className="empty-state-subtext">Try adjusting your search or filters</div>
                                 </div>
@@ -1246,11 +1367,10 @@
                                                 <td>{lead.assignee}</td>
                                                 <td>
                                                     <button
-                                                        className="icon-btn"
-                                                        onClick={() => handleEditLead(lead)}
-                                                        title="Edit"
+                                                        className="btn btn-icon"
+                                                        onClick={() => { setEditingLead(lead); setShowModal(true); }}
                                                     >
-                                                        ✏️
+                                                        <Icons.Edit />
                                                     </button>
                                                 </td>
                                             </tr>
@@ -1265,28 +1385,31 @@
                         <LeadModal
                             lead={editingLead}
                             formFields={formFields}
+                            currentUser={user}
                             onClose={() => setShowModal(false)}
                             onSave={async (leadData) => {
                                 try {
                                     if (editingLead) {
-                                        // Include all necessary fields for update
                                         await api.updateLead({
                                             ...leadData,
                                             id: editingLead.id,
                                             rowIndex: editingLead.rowIndex,
                                             created_date: editingLead.created_date
                                         });
-                                        showToast('Lead updated successfully!', 'success');
+                                        showToast('Lead updated successfully', 'success');
                                     } else {
-                                        await api.addLead(leadData);
-                                        showToast('Lead added successfully!', 'success');
+                                        // Auto-assign to creator
+                                        await api.addLead({
+                                            ...leadData,
+                                            Assignee: leadData.Assignee || user.fullName
+                                        });
+                                        showToast('Lead created successfully', 'success');
                                     }
                                     
                                     setShowModal(false);
                                     onRefresh();
                                 } catch (error) {
-                                    showToast('Failed to save lead: ' + error.message, 'error');
-                                    console.error(error);
+                                    showToast(error.message, 'error');
                                 }
                             }}
                         />
@@ -1296,31 +1419,40 @@
         };
 
         // ==================== LEAD MODAL ====================
-        const LeadModal = ({ lead, formFields, onClose, onSave }) => {
+        const LeadModal = ({ lead, formFields, currentUser, onClose, onSave }) => {
             const [formData, setFormData] = useState(() => {
                 const data = {};
                 formFields.forEach(field => {
                     const fieldKey = field.name.toLowerCase().replace(' ', '_');
                     data[field.name] = lead ? lead[fieldKey] : '';
                 });
+                // Auto-assign to current user if creating new
+                if (!lead && formFields.find(f => f.name === 'Assignee')) {
+                    data['Assignee'] = currentUser.fullName;
+                }
                 return data;
             });
+            const [imagePreview, setImagePreview] = useState(lead?.image || '');
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                onSave(formData);
+                onSave({ ...formData, image: imagePreview });
             };
 
-            const handleChange = (fieldName, value) => {
-                setFormData(prev => ({
-                    ...prev,
-                    [fieldName]: value
-                }));
+            const handleImageUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setImagePreview(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
             };
 
             return (
                 <div className="modal-overlay" onClick={onClose}>
-                    <div className="modal glass-strong" onClick={e => e.stopPropagation()}>
+                    <div className="modal card-elevated" onClick={e => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2 className="modal-title">{lead ? 'Edit Lead' : 'Add New Lead'}</h2>
                             <button className="close-btn" onClick={onClose}>×</button>
@@ -1337,7 +1469,7 @@
                                         <select
                                             className="form-input"
                                             value={formData[field.name]}
-                                            onChange={(e) => handleChange(field.name, e.target.value)}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
                                             required={field.required}
                                         >
                                             <option value="">Select {field.name}</option>
@@ -1349,7 +1481,7 @@
                                         <textarea
                                             className="form-input"
                                             value={formData[field.name]}
-                                            onChange={(e) => handleChange(field.name, e.target.value)}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
                                             required={field.required}
                                             rows="4"
                                         />
@@ -1358,19 +1490,42 @@
                                             type={field.type}
                                             className="form-input"
                                             value={formData[field.name]}
-                                            onChange={(e) => handleChange(field.name, e.target.value)}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
                                             required={field.required}
                                         />
                                     )}
                                 </div>
                             ))}
 
+                            <div className="form-group">
+                                <label className="form-label">Lead Image (Optional)</label>
+                                <div className={`image-upload-area ${imagePreview ? 'has-image' : ''}`} onClick={() => document.getElementById('imageInput').click()}>
+                                    <input
+                                        id="imageInput"
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleImageUpload}
+                                    />
+                                    {!imagePreview ? (
+                                        <>
+                                            <Icons.Upload />
+                                            <p style={{ marginTop: '8px', color: 'var(--gray-600)', fontSize: '14px' }}>
+                                                Click to upload image
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <img src={imagePreview} alt="Preview" className="image-preview" />
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" onClick={onClose}>
                                     Cancel
                                 </button>
                                 <button type="submit" className="btn btn-primary">
-                                    {lead ? 'Update Lead' : 'Add Lead'}
+                                    {lead ? 'Update Lead' : 'Create Lead'}
                                 </button>
                             </div>
                         </form>
@@ -1387,10 +1542,10 @@
                         <h1 className="page-title">Configuration</h1>
                     </div>
 
-                    <div className="content-card glass-strong">
-                        <h3 style={{ marginBottom: '20px', fontSize: '18px', fontWeight: '600' }}>Form Fields Configuration</h3>
+                    <div className="content-card card">
+                        <h3 style={{ marginBottom: '20px', fontSize: '16px', fontWeight: '600' }}>Form Fields Configuration</h3>
                         
-                        <p style={{ marginBottom: '20px', color: 'var(--gray-600)' }}>
+                        <p style={{ marginBottom: '20px', color: 'var(--gray-600)', fontSize: '14px' }}>
                             To modify form fields, edit the "Config" sheet in your Google Spreadsheet.
                         </p>
 
@@ -1418,17 +1573,9 @@
                         </div>
 
                         <button className="btn btn-primary" onClick={onRefresh} style={{ marginTop: '20px' }}>
+                            <Icons.Refresh />
                             Refresh Configuration
                         </button>
-                    </div>
-
-                    <div className="content-card glass-strong" style={{ marginTop: '20px' }}>
-                        <h3 style={{ marginBottom: '20px', fontSize: '18px', fontWeight: '600' }}>User Management</h3>
-                        
-                        <p style={{ color: 'var(--gray-600)' }}>
-                            To add or modify users, edit the "Users" sheet in your Google Spreadsheet.
-                            Each user should have: Username, Password, Role, Full Name, and Email.
-                        </p>
                     </div>
                 </>
             );
@@ -1446,15 +1593,6 @@
                 }
             }, []);
 
-            const handleLogin = (userData) => {
-                setUser(userData);
-            };
-
-            const handleLogout = () => {
-                localStorage.removeItem('currentUser');
-                setUser(null);
-            };
-
             const showToast = (message, type = 'info') => {
                 const id = Date.now();
                 setToasts(prev => [...prev, { id, message, type }]);
@@ -1467,16 +1605,15 @@
             return (
                 <>
                     {!user ? (
-                        <Login onLogin={handleLogin} />
+                        <Login onLogin={setUser} />
                     ) : (
-                        <Dashboard user={user} onLogout={handleLogout} showToast={showToast} />
+                        <Dashboard user={user} onLogout={() => { localStorage.removeItem('currentUser'); setUser(null); }} showToast={showToast} />
                     )}
                     <ToastContainer toasts={toasts} removeToast={removeToast} />
                 </>
             );
         };
 
-        // Render the app
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
