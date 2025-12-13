@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM - Lead Management System</title>
+    <title>Darex Systems - Lead Management</title>
     
     <!-- React and dependencies from CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -99,6 +99,28 @@
         .login-logo p {
             color: rgba(255, 255, 255, 0.9);
             font-size: 14px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: var(--gray-500);
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .password-toggle:hover {
+            color: var(--gray-700);
         }
 
         .form-group {
@@ -682,38 +704,65 @@
             }
 
             async get(action, params = {}) {
-                const url = new URL(this.baseUrl);
-                url.searchParams.append('action', action);
-                
-                Object.keys(params).forEach(key => {
-                    url.searchParams.append(key, params[key]);
-                });
+                try {
+                    const url = new URL(this.baseUrl);
+                    url.searchParams.append('action', action);
+                    
+                    Object.keys(params).forEach(key => {
+                        url.searchParams.append(key, params[key]);
+                    });
 
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (!data.success) {
-                    throw new Error(data.error || 'Request failed');
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        redirect: 'follow'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (!data.success) {
+                        throw new Error(data.error || 'Request failed');
+                    }
+                    
+                    return data;
+                } catch (error) {
+                    if (error.message.includes('Failed to fetch')) {
+                        throw new Error('Unable to connect to server. Please check:\n1. Apps Script URL is correct\n2. Script is deployed as Web App\n3. Access is set to "Anyone"');
+                    }
+                    throw error;
                 }
-                
-                return data;
             }
 
             async post(action, data) {
-                const url = `${this.baseUrl}?action=${action}`;
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.error || 'Request failed');
+                try {
+                    const url = `${this.baseUrl}?action=${action}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (!result.success) {
+                        throw new Error(result.error || 'Request failed');
+                    }
+                    
+                    return result;
+                } catch (error) {
+                    if (error.message.includes('Failed to fetch')) {
+                        throw new Error('Unable to connect to server. Please check your Apps Script deployment.');
+                    }
+                    throw error;
                 }
-                
-                return result;
             }
 
             async authenticate(username, password) {
@@ -780,6 +829,7 @@
         const Login = ({ onLogin }) => {
             const [username, setUsername] = useState('');
             const [password, setPassword] = useState('');
+            const [showPassword, setShowPassword] = useState(false);
             const [loading, setLoading] = useState(false);
             const [error, setError] = useState('');
 
@@ -805,7 +855,7 @@
                 <div className="login-container">
                     <div className="login-box glass-strong">
                         <div className="login-logo">
-                            <h1>🎯 CRM System</h1>
+                            <h1>Darex Systems</h1>
                             <p>Lead Management Platform</p>
                         </div>
                         
@@ -824,18 +874,29 @@
                             
                             <div className="form-group">
                                 <label className="form-label">Password</label>
-                                <input
-                                    type="password"
-                                    className="form-input"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter your password"
-                                    required
-                                />
+                                <div className="password-wrapper">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        className="form-input"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder="Enter your password"
+                                        required
+                                        style={{ paddingRight: '40px' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        title={showPassword ? "Hide password" : "Show password"}
+                                    >
+                                        {showPassword ? '👁️' : '👁️‍🗨️'}
+                                    </button>
+                                </div>
                             </div>
 
                             {error && (
-                                <div style={{ color: 'var(--danger)', fontSize: '14px', marginBottom: '16px' }}>
+                                <div style={{ color: 'var(--danger)', fontSize: '14px', marginBottom: '16px', padding: '12px', backgroundColor: 'rgba(239, 68, 68, 0.1)', borderRadius: '8px' }}>
                                     {error}
                                 </div>
                             )}
@@ -910,7 +971,7 @@
                 <div className="dashboard glass">
                     <div className="sidebar">
                         <div className="sidebar-header">
-                            <h2>🎯 CRM</h2>
+                            <h2>Darex Systems</h2>
                             <p>Lead Management</p>
                         </div>
 
