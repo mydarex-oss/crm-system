@@ -2006,14 +2006,33 @@
 
         // Leads View Component (simplified version)
         const LeadsView = ({ leads, user, showToast, onRefresh }) => {
+            const [showModal, setShowModal] = useState(false);
+            const [editingLead, setEditingLead] = useState(null);
+            const [formFields] = useState([
+                { name: 'Name', type: 'text', required: true, options: [] },
+                { name: 'Email', type: 'email', required: true, options: [] },
+                { name: 'Phone', type: 'tel', required: false, options: [] },
+                { name: 'Company', type: 'text', required: false, options: [] },
+                { name: 'Status', type: 'select', required: true, options: ['New', 'Contacted', 'Qualified', 'Won', 'Lost'] },
+                { name: 'Source', type: 'select', required: false, options: ['Website', 'Referral', 'Social Media', 'Cold Call'] },
+                { name: 'Assignee', type: 'text', required: false, options: [] },
+                { name: 'Notes', type: 'textarea', required: false, options: [] }
+            ]);
+
             return (
                 <>
                     <div className="page-header">
                         <h1 className="page-title">Leads</h1>
-                        <button className="btn btn-primary btn-sm" onClick={onRefresh}>
-                            <Icons.Refresh />
-                            Refresh
-                        </button>
+                        <div className="header-actions">
+                            <button className="btn btn-secondary btn-sm" onClick={onRefresh}>
+                                <Icons.Refresh />
+                                Refresh
+                            </button>
+                            <button className="btn btn-primary btn-sm" onClick={() => { setEditingLead(null); setShowModal(true); }}>
+                                <Icons.Plus />
+                                Add Lead
+                            </button>
+                        </div>
                     </div>
 
                     <div className="content-card card">
@@ -2026,6 +2045,7 @@
                                         <th>Company</th>
                                         <th>Status</th>
                                         <th>Assignee</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2040,6 +2060,11 @@
                                                 </span>
                                             </td>
                                             <td>{lead.assignee}</td>
+                                            <td>
+                                                <button className="btn btn-icon" onClick={() => { setEditingLead(lead); setShowModal(true); }}>
+                                                    <Icons.Edit />
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -2052,7 +2077,132 @@
                             )}
                         </div>
                     </div>
+
+                    {showModal && (
+                        <LeadModal
+                            lead={editingLead}
+                            formFields={formFields}
+                            currentUser={user}
+                            onClose={() => setShowModal(false)}
+                            onSave={async (leadData) => {
+                                try {
+                                    if (editingLead) {
+                                        await api.updateLead({
+                                            ...leadData,
+                                            id: editingLead.id,
+                                            rowIndex: editingLead.rowIndex,
+                                            created_date: editingLead.created_date
+                                        });
+                                        showToast('Lead updated successfully', 'success');
+                                    } else {
+                                        await api.addLead({
+                                            ...leadData,
+                                            Assignee: leadData.Assignee || user.fullName
+                                        });
+                                        showToast('Lead created successfully', 'success');
+                                    }
+                                    
+                                    setShowModal(false);
+                                    onRefresh();
+                                } catch (error) {
+                                    showToast(error.message, 'error');
+                                }
+                            }}
+                        />
+                    )}
                 </>
+            );
+        };
+
+        // Lead Modal Component
+        const LeadModal = ({ lead, formFields, currentUser, onClose, onSave }) => {
+            const [formData, setFormData] = useState(() => {
+                const data = {};
+                formFields.forEach(field => {
+                    const fieldKey = field.name.toLowerCase().replace(' ', '_');
+                    data[field.name] = lead ? lead[fieldKey] : '';
+                });
+                if (!lead && formFields.find(f => f.name === 'Assignee')) {
+                    data['Assignee'] = currentUser.fullName;
+                }
+                return data;
+            });
+            const [imagePreview, setImagePreview] = useState(lead?.image || '');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                onSave({ ...formData, image: imagePreview });
+            };
+
+            const handleImageUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setImagePreview(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2 className="modal-title">{lead ? 'Edit Lead' : 'Add New Lead'}</h2>
+                            <button className="close-btn" onClick={onClose}>×</button>
+                        </div>
+
+                        <form onSubmit={handleSubmit}>
+                            {formFields.map(field => (
+                                <div className="form-group" key={field.name}>
+                                    <label className="form-label">
+                                        {field.name} {field.required && <span style={{ color: 'var(--danger)' }}>*</span>}
+                                    </label>
+                                    
+                                    {field.type === 'select' ? (
+                                        <select
+                                            className="form-input"
+                                            value={formData[field.name]}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
+                                            required={field.required}
+                                        >
+                                            <option value="">Select {field.name}</option>
+                                            {field.options.map(option => (
+                                                <option key={option} value={option}>{option}</option>
+                                            ))}
+                                        </select>
+                                    ) : field.type === 'textarea' ? (
+                                        <textarea
+                                            className="form-input"
+                                            value={formData[field.name]}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
+                                            required={field.required}
+                                            rows="4"
+                                        />
+                                    ) : (
+                                        <input
+                                            type={field.type}
+                                            className="form-input"
+                                            value={formData[field.name]}
+                                            onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
+                                            required={field.required}
+                                        />
+                                    )}
+                                </div>
+                            ))}
+
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={onClose}>
+                                    Cancel
+                                </button>
+                                <button type="submit" className="btn btn-primary">
+                                    {lead ? 'Update Lead' : 'Create Lead'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             );
         };
 
