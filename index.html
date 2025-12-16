@@ -1161,28 +1161,30 @@
                 }
             };
 
-            const renderContent = () => {
-                if (loading) return <div className="spinner"></div>;
+         const renderContent = () => {
+    if (loading) return <div className="spinner"></div>;
 
-                switch (activeTab) {
-                    case 'home':
-                        return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
-                    case 'leads':
-                        return <LeadsView leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
-                    case 'activities':
-                        return <ActivitiesView activities={data.activities} user={user} showToast={showToast} onRefresh={loadData} />;
-                    case 'followups':
-                        return <FollowUpsView followUps={data.followUps} user={user} showToast={showToast} onRefresh={loadData} />;
-                    case 'analytics':
-                        return <AnalyticsView data={data} user={user} />;
-                    case 'team':
-                        return <TeamView teamPerformance={data.teamPerformance} />;
-                    case 'expenses':
-                        return <ExpensesView user={user} showToast={showToast} />;
-                    default:
-                        return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
-                }
-            };
+    switch (activeTab) {
+        case 'home':
+            return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
+        case 'leads':
+            return <LeadsView leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
+        case 'activities':
+            return <ActivitiesView activities={data.activities} user={user} showToast={showToast} onRefresh={loadData} />;
+        case 'followups':
+            return <FollowUpsView followUps={data.followUps} user={user} showToast={showToast} onRefresh={loadData} />;
+        case 'analytics':
+            return <AnalyticsView data={data} user={user} />;
+        case 'team':
+            return <TeamView teamPerformance={data.teamPerformance} />;
+        case 'expenses':
+            return <ExpensesView user={user} showToast={showToast} />;
+        case 'settings':  // ADD THIS
+            return <SettingsView user={user} showToast={showToast} />;  // ADD THIS
+        default:
+            return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
+    }
+};
 
             return (
                 <div className="dashboard">
