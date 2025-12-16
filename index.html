@@ -132,6 +132,11 @@
             color: var(--gray-500);
         }
 
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
         /* Buttons */
         .btn {
             padding: 10px 20px;
@@ -474,6 +479,7 @@
             border-radius: 6px;
             border: 1px solid var(--gray-200);
             overflow: hidden;
+            margin-bottom: 24px;
         }
 
         .table-header {
@@ -541,9 +547,16 @@
         .badge-lost { background: rgba(217, 83, 79, 0.1); color: var(--danger); }
         .badge-pending { background: rgba(240, 173, 78, 0.1); color: var(--warning); }
         .badge-completed { background: rgba(92, 184, 92, 0.1); color: var(--success); }
+        .badge-cancelled { background: rgba(217, 83, 79, 0.1); color: var(--danger); }
         .badge-high { background: rgba(217, 83, 79, 0.1); color: var(--danger); }
         .badge-medium { background: rgba(240, 173, 78, 0.1); color: var(--warning); }
         .badge-low { background: rgba(91, 192, 222, 0.1); color: var(--info); }
+        .badge-successful { background: rgba(92, 184, 92, 0.1); color: var(--success); }
+        .badge-failed { background: rgba(217, 83, 79, 0.1); color: var(--danger); }
+        .badge-followup { background: rgba(240, 173, 78, 0.1); color: var(--warning); }
+        .badge-call { background: rgba(74, 144, 226, 0.1); color: var(--primary); }
+        .badge-meeting { background: rgba(92, 184, 92, 0.1); color: var(--success); }
+        .badge-email { background: rgba(240, 173, 78, 0.1); color: var(--warning); }
 
         /* Modal */
         .modal-overlay {
@@ -680,6 +693,12 @@
             border: 1px solid rgba(217, 83, 79, 0.2);
         }
 
+        .alert-info {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
         /* Loading */
         .spinner {
             border: 3px solid var(--gray-200);
@@ -731,6 +750,35 @@
             color: var(--gray-400);
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .tab {
+            padding: 10px 16px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -756,8 +804,8 @@
 
         // Configuration
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZBjZvRFKMYovqgKA9TKMalZ5DSnsdIr6WmsgfSbHXMYkLriQ5johO8nn0dqTzNL7mRA/exec';
-        const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-        const AUTO_REFRESH_INTERVAL = 30000; // 30 seconds
+        const SESSION_TIMEOUT = 24 * 60 * 60 * 1000;
+        const AUTO_REFRESH_INTERVAL = 30000;
 
         // Session Management
         const SessionManager = {
@@ -777,13 +825,11 @@
                 const sessionData = JSON.parse(session);
                 const now = Date.now();
                 
-                // Check if session expired
                 if (now - sessionData.loginTime > SESSION_TIMEOUT) {
                     SessionManager.clearSession();
                     return null;
                 }
                 
-                // Update last activity
                 sessionData.lastActivity = now;
                 localStorage.setItem('session', JSON.stringify(sessionData));
                 
@@ -1113,19 +1159,17 @@
             useEffect(() => {
                 loadData();
                 
-                // Auto-refresh every 30 seconds
                 const interval = setInterval(() => {
                     loadData(true);
                 }, AUTO_REFRESH_INTERVAL);
 
-                // Check session timeout
                 const sessionCheck = setInterval(() => {
                     const session = SessionManager.getSession();
                     if (!session) {
                         showToast('Session expired. Please login again.', 'info');
                         onLogout();
                     }
-                }, 60000); // Check every minute
+                }, 60000);
 
                 return () => {
                     clearInterval(interval);
@@ -1161,30 +1205,30 @@
                 }
             };
 
-         const renderContent = () => {
-    if (loading) return <div className="spinner"></div>;
+            const renderContent = () => {
+                if (loading) return <div className="spinner"></div>;
 
-    switch (activeTab) {
-        case 'home':
-            return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
-        case 'leads':
-            return <LeadsView leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
-        case 'activities':
-            return <ActivitiesView activities={data.activities} user={user} showToast={showToast} onRefresh={loadData} />;
-        case 'followups':
-            return <FollowUpsView followUps={data.followUps} user={user} showToast={showToast} onRefresh={loadData} />;
-        case 'analytics':
-            return <AnalyticsView data={data} user={user} />;
-        case 'team':
-            return <TeamView teamPerformance={data.teamPerformance} />;
-        case 'expenses':
-            return <ExpensesView user={user} showToast={showToast} />;
-        case 'settings':  // ADD THIS
-            return <SettingsView user={user} showToast={showToast} />;  // ADD THIS
-        default:
-            return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
-    }
-};
+                switch (activeTab) {
+                    case 'home':
+                        return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
+                    case 'leads':
+                        return <LeadsView leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
+                    case 'activities':
+                        return <ActivitiesView activities={data.activities} leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
+                    case 'followups':
+                        return <FollowUpsView followUps={data.followUps} user={user} showToast={showToast} onRefresh={loadData} />;
+                    case 'analytics':
+                        return <AnalyticsView data={data} user={user} />;
+                    case 'team':
+                        return <TeamView teamPerformance={data.teamPerformance} />;
+                    case 'expenses':
+                        return <ExpensesView user={user} showToast={showToast} />;
+                    case 'settings':
+                        return <SettingsView user={user} showToast={showToast} />;
+                    default:
+                        return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
+                }
+            };
 
             return (
                 <div className="dashboard">
@@ -1302,14 +1346,13 @@
             );
         };
 
-        // Home View Component (just showing structure - complete file continues...)
+        // Home View Component
         const HomeView = ({ data, user, showToast, onRefresh }) => {
             const totalRevenue = data.leads.filter(l => l.status === 'Won').reduce((sum, l) => sum + parseFloat(l.value || 0), 0);
             const activeDeals = data.leads.filter(l => l.status !== 'Won' && l.status !== 'Lost').length;
             const conversionRate = data.leads.length > 0 ? ((data.leads.filter(l => l.status === 'Won').length / data.leads.length) * 100).toFixed(1) : 0;
 
             useEffect(() => {
-                // Revenue trend chart
                 const ctx = document.getElementById('revenueChart');
                 if (ctx) {
                     new Chart(ctx, {
@@ -1335,7 +1378,6 @@
                     });
                 }
 
-                // Lead source chart
                 const ctx2 = document.getElementById('sourceChart');
                 if (ctx2) {
                     new Chart(ctx2, {
@@ -1468,17 +1510,965 @@
             );
         };
 
-        // Note: Due to character limits, I'm providing the core structure.
-        // The complete file needs: LeadsView, ActivitiesView, FollowUpsView, AnalyticsView, TeamView, ExpensesView
-        // These follow the same pattern with Zoho-like styling
+        // LEADS VIEW - COMPLETE IMPLEMENTATION
+        const LeadsView = ({ leads, user, showToast, onRefresh }) => {
+            const [showModal, setShowModal] = useState(false);
+            const [editingLead, setEditingLead] = useState(null);
+            const [formData, setFormData] = useState({
+                Name: '',
+                Email: '',
+                Phone: '',
+                Company: '',
+                Status: 'New',
+                Source: '',
+                Assignee: user.fullName,
+                Notes: ''
+            });
+            const [saving, setSaving] = useState(false);
 
-        // Simplified views for now - complete implementation would include all CRUD operations
-        const LeadsView = () => <div className="empty-state"><div className="empty-state-text">Leads View - Implementation continues</div></div>;
-        const ActivitiesView = () => <div className="empty-state"><div className="empty-state-text">Activities View</div></div>;
-        const FollowUpsView = () => <div className="empty-state"><div className="empty-state-text">Follow-ups View</div></div>;
-        const AnalyticsView = () => <div className="empty-state"><div className="empty-state-text">Analytics View</div></div>;
-        const TeamView = () => <div className="empty-state"><div className="empty-state-text">Team View</div></div>;
-        const ExpensesView = () => <div className="empty-state"><div className="empty-state-text">Expenses View</div></div>;
+            const handleAdd = () => {
+                setEditingLead(null);
+                setFormData({
+                    Name: '',
+                    Email: '',
+                    Phone: '',
+                    Company: '',
+                    Status: 'New',
+                    Source: '',
+                    Assignee: user.fullName,
+                    Notes: ''
+                });
+                setShowModal(true);
+            };
+
+            const handleEdit = (lead) => {
+                setEditingLead(lead);
+                setFormData({
+                    Name: lead.name,
+                    Email: lead.email,
+                    Phone: lead.phone,
+                    Company: lead.company,
+                    Status: lead.status,
+                    Source: lead.source,
+                    Assignee: lead.assignee,
+                    Notes: lead.notes
+                });
+                setShowModal(true);
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setSaving(true);
+
+                try {
+                    if (editingLead) {
+                        await api.updateLead({
+                            ...formData,
+                            id: editingLead.id,
+                            rowIndex: editingLead.rowIndex,
+                            created_date: editingLead.created_date
+                        });
+                        showToast('Lead updated successfully', 'success');
+                    } else {
+                        await api.addLead(formData);
+                        showToast('Lead added successfully', 'success');
+                    }
+                    setShowModal(false);
+                    onRefresh();
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    setSaving(false);
+                }
+            };
+
+            return (
+                <>
+                    <div className="table-card">
+                        <div className="table-header">
+                            <div className="table-title">All Leads ({leads.length})</div>
+                            <div className="table-actions">
+                                <button className="btn btn-primary btn-sm" onClick={handleAdd}>
+                                    <Icons.Plus /> Add Lead
+                                </button>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Company</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Assignee</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {leads.map((lead, idx) => (
+                                    <tr key={idx}>
+                                        <td>{lead.name}</td>
+                                        <td>{lead.company}</td>
+                                        <td>{lead.email}</td>
+                                        <td>{lead.phone}</td>
+                                        <td><span className={`badge badge-${lead.status?.toLowerCase()}`}>{lead.status}</span></td>
+                                        <td>{lead.assignee}</td>
+                                        <td>
+                                            <button className="btn btn-icon" onClick={() => handleEdit(lead)}>
+                                                <Icons.Edit />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {leads.length === 0 && (
+                                    <tr>
+                                        <td colSpan="7" className="empty-state">
+                                            <div className="empty-state-text">No leads yet</div>
+                                            <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                                                <Icons.Plus /> Add Your First Lead
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <div className="modal-title">{editingLead ? 'Edit Lead' : 'Add New Lead'}</div>
+                                    <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                                </div>
+                                <form onSubmit={handleSubmit}>
+                                    <div className="modal-body">
+                                        <div className="form-group">
+                                            <label className="form-label">Name *</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={formData.Name}
+                                                onChange={(e) => setFormData({...formData, Name: e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Email *</label>
+                                            <input
+                                                type="email"
+                                                className="form-input"
+                                                value={formData.Email}
+                                                onChange={(e) => setFormData({...formData, Email: e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Phone</label>
+                                            <input
+                                                type="tel"
+                                                className="form-input"
+                                                value={formData.Phone}
+                                                onChange={(e) => setFormData({...formData, Phone: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Company</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={formData.Company}
+                                                onChange={(e) => setFormData({...formData, Company: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Status</label>
+                                            <select
+                                                className="form-input"
+                                                value={formData.Status}
+                                                onChange={(e) => setFormData({...formData, Status: e.target.value})}
+                                            >
+                                                <option>New</option>
+                                                <option>Contacted</option>
+                                                <option>Qualified</option>
+                                                <option>Won</option>
+                                                <option>Lost</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Source</label>
+                                            <select
+                                                className="form-input"
+                                                value={formData.Source}
+                                                onChange={(e) => setFormData({...formData, Source: e.target.value})}
+                                            >
+                                                <option value="">Select source</option>
+                                                <option>Website</option>
+                                                <option>Referral</option>
+                                                <option>Social Media</option>
+                                                <option>Cold Call</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Assignee</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={formData.Assignee}
+                                                onChange={(e) => setFormData({...formData, Assignee: e.target.value})}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Notes</label>
+                                            <textarea
+                                                className="form-input"
+                                                value={formData.Notes}
+                                                onChange={(e) => setFormData({...formData, Notes: e.target.value})}
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="btn btn-primary" disabled={saving}>
+                                            {saving ? 'Saving...' : (editingLead ? 'Update' : 'Add Lead')}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        };
+
+        // ACTIVITIES VIEW - COMPLETE IMPLEMENTATION
+        const ActivitiesView = ({ activities, leads, user, showToast, onRefresh }) => {
+            const [showModal, setShowModal] = useState(false);
+            const [activeFilter, setActiveFilter] = useState('All');
+            const [formData, setFormData] = useState({
+                type: 'Call',
+                clientName: '',
+                date: new Date().toISOString().slice(0, 16),
+                duration: '',
+                outcome: 'Pending',
+                notes: ''
+            });
+            const [saving, setSaving] = useState(false);
+
+            const filteredActivities = activeFilter === 'All' 
+                ? activities 
+                : activities.filter(a => a.type === activeFilter);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setSaving(true);
+
+                try {
+                    await api.addActivity({
+                        ...formData,
+                        repId: user.username,
+                        repName: user.fullName
+                    });
+                    showToast('Activity logged successfully', 'success');
+                    setShowModal(false);
+                    setFormData({
+                        type: 'Call',
+                        clientName: '',
+                        date: new Date().toISOString().slice(0, 16),
+                        duration: '',
+                        outcome: 'Pending',
+                        notes: ''
+                    });
+                    onRefresh();
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    setSaving(false);
+                }
+            };
+
+            return (
+                <>
+                    <div className="tabs">
+                        {['All', 'Call', 'Meeting', 'Email'].map(tab => (
+                            <button
+                                key={tab}
+                                className={`tab ${activeFilter === tab ? 'active' : ''}`}
+                                onClick={() => setActiveFilter(tab)}
+                            >
+                                {tab} ({tab === 'All' ? activities.length : activities.filter(a => a.type === tab).length})
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="table-card">
+                        <div className="table-header">
+                            <div className="table-title">Activity Log</div>
+                            <div className="table-actions">
+                                <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
+                                    <Icons.Plus /> Log Activity
+                                </button>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Client</th>
+                                    <th>Rep</th>
+                                    <th>Date</th>
+                                    <th>Duration</th>
+                                    <th>Outcome</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredActivities.map((activity, idx) => (
+                                    <tr key={idx}>
+                                        <td><span className={`badge badge-${activity.type?.toLowerCase()}`}>{activity.type}</span></td>
+                                        <td>{activity.clientName || activity.client_name}</td>
+                                        <td>{activity.repName || activity.rep_name}</td>
+                                        <td>{new Date(activity.date).toLocaleDateString()}</td>
+                                        <td>{activity.duration || 0} min</td>
+                                        <td><span className={`badge badge-${activity.outcome?.toLowerCase()}`}>{activity.outcome}</span></td>
+                                        <td>{activity.notes}</td>
+                                    </tr>
+                                ))}
+                                {filteredActivities.length === 0 && (
+                                    <tr>
+                                        <td colSpan="7" className="empty-state">
+                                            <div className="empty-state-text">No activities yet</div>
+                                            <button className="btn btn-primary" onClick={() => setShowModal(true)} style={{ marginTop: '16px' }}>
+                                                <Icons.Plus /> Log Your First Activity
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <div className="modal-title">Log Activity</div>
+                                    <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                                </div>
+                                <form onSubmit={handleSubmit}>
+                                    <div className="modal-body">
+                                        <div className="form-group">
+                                            <label className="form-label">Activity Type *</label>
+                                            <select
+                                                className="form-input"
+                                                value={formData.type}
+                                                onChange={(e) => setFormData({...formData, type: e.target.value})}
+                                                required
+                                            >
+                                                <option>Call</option>
+                                                <option>Meeting</option>
+                                                <option>Email</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Client Name *</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={formData.clientName}
+                                                onChange={(e) => setFormData({...formData, clientName: e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Date & Time *</label>
+                                            <input
+                                                type="datetime-local"
+                                                className="form-input"
+                                                value={formData.date}
+                                                onChange={(e) => setFormData({...formData, date: e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Duration (minutes)</label>
+                                            <input
+                                                type="number"
+                                                className="form-input"
+                                                value={formData.duration}
+                                                onChange={(e) => setFormData({...formData, duration: e.target.value})}
+                                                min="0"
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Outcome *</label>
+                                            <select
+                                                className="form-input"
+                                                value={formData.outcome}
+                                                onChange={(e) => setFormData({...formData, outcome: e.target.value})}
+                                                required
+                                            >
+                                                <option>Successful</option>
+                                                <option>Pending</option>
+                                                <option>Failed</option>
+                                                <option>FollowUp</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Notes</label>
+                                            <textarea
+                                                className="form-input"
+                                                value={formData.notes}
+                                                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="btn btn-primary" disabled={saving}>
+                                            {saving ? 'Logging...' : 'Log Activity'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        };
+
+        // FOLLOW-UPS VIEW - COMPLETE IMPLEMENTATION
+        const FollowUpsView = ({ followUps, user, showToast, onRefresh }) => {
+            const [showModal, setShowModal] = useState(false);
+            const [editingFollowUp, setEditingFollowUp] = useState(null);
+            const [formData, setFormData] = useState({
+                clientName: '',
+                date: new Date().toISOString().slice(0, 16),
+                objective: '',
+                priority: 'Medium',
+                status: 'Pending'
+            });
+            const [saving, setSaving] = useState(false);
+
+            const overdueCount = followUps.filter(f => 
+                f.status === 'Pending' && new Date(f.date) < new Date()
+            ).length;
+
+            const handleAdd = () => {
+                setEditingFollowUp(null);
+                setFormData({
+                    clientName: '',
+                    date: new Date().toISOString().slice(0, 16),
+                    objective: '',
+                    priority: 'Medium',
+                    status: 'Pending'
+                });
+                setShowModal(true);
+            };
+
+            const handleEdit = (followUp) => {
+                setEditingFollowUp(followUp);
+                setFormData({
+                    clientName: followUp.clientName || followUp.client_name,
+                    date: followUp.date,
+                    objective: followUp.objective,
+                    priority: followUp.priority,
+                    status: followUp.status
+                });
+                setShowModal(true);
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setSaving(true);
+
+                try {
+                    if (editingFollowUp) {
+                        await api.updateFollowUp({
+                            ...formData,
+                            id: editingFollowUp.id,
+                            rowIndex: editingFollowUp.rowIndex,
+                            repId: editingFollowUp.repId || editingFollowUp.rep_id,
+                            repName: editingFollowUp.repName || editingFollowUp.rep_name
+                        });
+                        showToast('Follow-up updated successfully', 'success');
+                    } else {
+                        await api.addFollowUp({
+                            ...formData,
+                            repId: user.username,
+                            repName: user.fullName
+                        });
+                        showToast('Follow-up scheduled successfully', 'success');
+                    }
+                    setShowModal(false);
+                    onRefresh();
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    setSaving(false);
+                }
+            };
+
+            return (
+                <>
+                    {overdueCount > 0 && (
+                        <div className="alert alert-error" style={{ marginBottom: '20px' }}>
+                            <Icons.XCircle />
+                            You have {overdueCount} overdue follow-up{overdueCount > 1 ? 's' : ''}!
+                        </div>
+                    )}
+
+                    <div className="table-card">
+                        <div className="table-header">
+                            <div className="table-title">Follow-ups ({followUps.length})</div>
+                            <div className="table-actions">
+                                <button className="btn btn-primary btn-sm" onClick={handleAdd}>
+                                    <Icons.Plus /> Schedule Follow-up
+                                </button>
+                            </div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Objective</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Rep</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {followUps.map((followUp, idx) => {
+                                    const isOverdue = followUp.status === 'Pending' && new Date(followUp.date) < new Date();
+                                    return (
+                                        <tr key={idx} style={{ background: isOverdue ? 'rgba(217, 83, 79, 0.05)' : 'transparent' }}>
+                                            <td>{followUp.clientName || followUp.client_name}</td>
+                                            <td>
+                                                {new Date(followUp.date).toLocaleDateString()} {new Date(followUp.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                                {isOverdue && <span style={{color: 'var(--danger)', marginLeft: '8px', fontWeight: '600'}}>OVERDUE</span>}
+                                            </td>
+                                            <td>{followUp.objective}</td>
+                                            <td><span className={`badge badge-${followUp.priority?.toLowerCase()}`}>{followUp.priority}</span></td>
+                                            <td><span className={`badge badge-${followUp.status?.toLowerCase()}`}>{followUp.status}</span></td>
+                                            <td>{followUp.repName || followUp.rep_name}</td>
+                                            <td>
+                                                <button className="btn btn-icon" onClick={() => handleEdit(followUp)}>
+                                                    <Icons.Edit />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                                {followUps.length === 0 && (
+                                    <tr>
+                                        <td colSpan="7" className="empty-state">
+                                            <div className="empty-state-text">No follow-ups scheduled</div>
+                                            <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                                                <Icons.Plus /> Schedule Your First Follow-up
+                                            </button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {showModal && (
+                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                            <div className="modal" onClick={(e) => e.stopPropagation()}>
+                                <div className="modal-header">
+                                    <div className="modal-title">{editingFollowUp ? 'Edit Follow-up' : 'Schedule Follow-up'}</div>
+                                    <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                                </div>
+                                <form onSubmit={handleSubmit}>
+                                    <div className="modal-body">
+                                        <div className="form-group">
+                                            <label className="form-label">Client Name *</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={formData.clientName}
+                                                onChange={(e) => setFormData({...formData, clientName: e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Date & Time *</label>
+                                            <input
+                                                type="datetime-local"
+                                                className="form-input"
+                                                value={formData.date}
+                                                onChange={(e) => setFormData({...formData, date: e.target.value})}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Objective *</label>
+                                            <input
+                                                type="text"
+                                                className="form-input"
+                                                value={formData.objective}
+                                                onChange={(e) => setFormData({...formData, objective: e.target.value})}
+                                                placeholder="What do you want to achieve?"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Priority *</label>
+                                            <select
+                                                className="form-input"
+                                                value={formData.priority}
+                                                onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                                                required
+                                            >
+                                                <option>High</option>
+                                                <option>Medium</option>
+                                                <option>Low</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Status</label>
+                                            <select
+                                                className="form-input"
+                                                value={formData.status}
+                                                onChange={(e) => setFormData({...formData, status: e.target.value})}
+                                            >
+                                                <option>Pending</option>
+                                                <option>Completed</option>
+                                                <option>Cancelled</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="btn btn-primary" disabled={saving}>
+                                            {saving ? 'Saving...' : (editingFollowUp ? 'Update' : 'Schedule')}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </>
+            );
+        };
+
+        // ANALYTICS VIEW - COMPLETE IMPLEMENTATION
+        const AnalyticsView = ({ data }) => {
+            useEffect(() => {
+                // Lead Status Chart
+                const ctx1 = document.getElementById('leadStatusChart');
+                if (ctx1) {
+                    const statusCounts = {};
+                    data.leads.forEach(l => {
+                        statusCounts[l.status] = (statusCounts[l.status] || 0) + 1;
+                    });
+
+                    new Chart(ctx1, {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(statusCounts),
+                            datasets: [{
+                                data: Object.values(statusCounts),
+                                backgroundColor: ['#4A90E2', '#5BC0DE', '#5CB85C', '#F0AD4E', '#D9534F']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom' }
+                            }
+                        }
+                    });
+                }
+
+                // Activity Types Chart
+                const ctx2 = document.getElementById('activityTypesChart');
+                if (ctx2) {
+                    const typeCounts = {};
+                    data.activities.forEach(a => {
+                        typeCounts[a.type] = (typeCounts[a.type] || 0) + 1;
+                    });
+
+                    new Chart(ctx2, {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(typeCounts),
+                            datasets: [{
+                                label: 'Activities',
+                                data: Object.values(typeCounts),
+                                backgroundColor: '#4A90E2'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }
+
+                // User Performance Chart
+                const ctx3 = document.getElementById('userPerfChart');
+                if (ctx3) {
+                    const userCounts = {};
+                    data.activities.forEach(a => {
+                        const name = a.repName || a.rep_name || 'Unknown';
+                        userCounts[name] = (userCounts[name] || 0) + 1;
+                    });
+
+                    new Chart(ctx3, {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(userCounts),
+                            datasets: [{
+                                label: 'Activities',
+                                data: Object.values(userCounts),
+                                backgroundColor: '#5CB85C'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: {
+                                legend: { display: false }
+                            }
+                        }
+                    });
+                }
+            }, [data]);
+
+            return (
+                <>
+                    <div className="chart-grid">
+                        <div className="chart-card">
+                            <div className="chart-header">
+                                <div className="chart-title">Lead Status Distribution</div>
+                            </div>
+                            <div className="chart-container">
+                                <canvas id="leadStatusChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div className="chart-card">
+                            <div className="chart-header">
+                                <div className="chart-title">Activity Types</div>
+                            </div>
+                            <div className="chart-container">
+                                <canvas id="activityTypesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div className="chart-card">
+                            <div className="chart-header">
+                                <div className="chart-title">User Activity Performance</div>
+                            </div>
+                            <div className="chart-container">
+                                <canvas id="userPerfChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="stats-grid">
+                        <div className="stat-card">
+                            <div className="stat-label">Total Activities</div>
+                            <div className="stat-value">{data.activities.length}</div>
+                            <div className="stat-footer">
+                                <span className="stat-subtext">All time</span>
+                            </div>
+                        </div>
+
+                        <div className="stat-card">
+                            <div className="stat-label">Pending Follow-ups</div>
+                            <div className="stat-value">
+                                {data.followUps.filter(f => f.status === 'Pending').length}
+                            </div>
+                            <div className="stat-footer">
+                                <span className="stat-subtext">Upcoming</span>
+                            </div>
+                        </div>
+
+                        <div className="stat-card">
+                            <div className="stat-label">Win Rate</div>
+                            <div className="stat-value">
+                                {data.leads.length > 0 
+                                    ? ((data.leads.filter(l => l.status === 'Won').length / data.leads.length) * 100).toFixed(1) 
+                                    : 0}%
+                            </div>
+                            <div className="stat-footer">
+                                <span className="stat-subtext">Conversion rate</span>
+                            </div>
+                        </div>
+
+                        <div className="stat-card">
+                            <div className="stat-label">Active Leads</div>
+                            <div className="stat-value">
+                                {data.leads.filter(l => l.status !== 'Won' && l.status !== 'Lost').length}
+                            </div>
+                            <div className="stat-footer">
+                                <span className="stat-subtext">In pipeline</span>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        };
+
+        // TEAM VIEW - COMPLETE IMPLEMENTATION
+        const TeamView = ({ teamPerformance }) => {
+            return (
+                <>
+                    <div className="stats-grid">
+                        {teamPerformance.map((member, idx) => (
+                            <div key={idx} className="card stat-card">
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '4px' }}>
+                                        {member.name}
+                                    </div>
+                                    <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                                        {member.role}
+                                    </div>
+                                </div>
+
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Calls Made</span>
+                                        <span style={{ fontSize: '14px', fontWeight: '600' }}>
+                                            {member.performance.calls} / {member.targets.calls}
+                                        </span>
+                                    </div>
+                                    <div style={{ height: '6px', background: 'var(--gray-200)', borderRadius: '3px', overflow: 'hidden' }}>
+                                        <div style={{ 
+                                            height: '100%', 
+                                            width: `${Math.min((member.performance.calls / member.targets.calls) * 100, 100)}%`,
+                                            background: 'linear-gradient(90deg, #4A90E2 0%, #5BC0DE 100%)',
+                                            transition: 'width 0.5s'
+                                        }}></div>
+                                    </div>
+                                </div>
+
+                                <div style={{ marginBottom: '16px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Meetings Held</span>
+                                        <span style={{ fontSize: '14px', fontWeight: '600' }}>
+                                            {member.performance.meetings} / {member.targets.meetings}
+                                        </span>
+                                    </div>
+                                    <div style={{ height: '6px', background: 'var(--gray-200)', borderRadius: '3px', overflow: 'hidden' }}>
+                                        <div style={{ 
+                                            height: '100%', 
+                                            width: `${Math.min((member.performance.meetings / member.targets.meetings) * 100, 100)}%`,
+                                            background: 'linear-gradient(90deg, #5CB85C 0%, #6BB38A 100%)',
+                                            transition: 'width 0.5s'
+                                        }}></div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                        <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Deals Closed</span>
+                                        <span style={{ fontSize: '14px', fontWeight: '600' }}>
+                                            {member.performance.deals} / {member.targets.deals}
+                                        </span>
+                                    </div>
+                                    <div style={{ height: '6px', background: 'var(--gray-200)', borderRadius: '3px', overflow: 'hidden' }}>
+                                        <div style={{ 
+                                            height: '100%', 
+                                            width: `${Math.min((member.performance.deals / member.targets.deals) * 100, 100)}%`,
+                                            background: 'linear-gradient(90deg, #F0AD4E 0%, #E8A15D 100%)',
+                                            transition: 'width 0.5s'
+                                        }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        {teamPerformance.length === 0 && (
+                            <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
+                                <div className="empty-state-text">No team members found</div>
+                            </div>
+                        )}
+                    </div>
+                </>
+            );
+        };
+
+        // EXPENSES VIEW - SIMPLE IMPLEMENTATION
+        const ExpensesView = () => {
+            return (
+                <div className="alert alert-info">
+                    <Icons.InfoCircle />
+                    Expenses tracking coming soon! This feature will allow you to track sales-related expenses.
+                </div>
+            );
+        };
+
+        // SETTINGS VIEW - COMPLETE IMPLEMENTATION
+        const SettingsView = ({ user, showToast }) => {
+            return (
+                <>
+                    <div className="table-card">
+                        <div className="table-header">
+                            <div className="table-title">Account Settings</div>
+                        </div>
+                        <div style={{ padding: '24px' }}>
+                            <div style={{ marginBottom: '24px' }}>
+                                <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>User Information</h3>
+                                <div style={{ display: 'grid', gap: '16px' }}>
+                                    <div>
+                                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Full Name</div>
+                                        <div style={{ fontSize: '15px', fontWeight: '500' }}>{user.fullName}</div>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Username</div>
+                                        <div style={{ fontSize: '15px', fontWeight: '500' }}>{user.username}</div>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Role</div>
+                                        <div><span className={`badge badge-${user.role}`}>{user.role}</span></div>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Email</div>
+                                        <div style={{ fontSize: '15px', fontWeight: '500' }}>{user.email}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ marginBottom: '24px', paddingTop: '24px', borderTop: '1px solid var(--gray-200)' }}>
+                                <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>Session Information</h3>
+                                <div className="alert alert-info">
+                                    <Icons.InfoCircle />
+                                    Your session will automatically expire after 24 hours for security purposes.
+                                </div>
+                            </div>
+
+                            <div style={{ paddingTop: '24px', borderTop: '1px solid var(--gray-200)' }}>
+                                <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>System Information</h3>
+                                <div style={{ display: 'grid', gap: '12px', fontSize: '14px' }}>
+                                    <div>• Auto-refresh: Every 30 seconds</div>
+                                    <div>• Session timeout: 24 hours</div>
+                                    <div>• Version: 3.0 (Zoho Theme)</div>
+                                    <div>• Platform: Darex SalesPulse</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            );
+        };
 
         // Main App
         const App = () => {
