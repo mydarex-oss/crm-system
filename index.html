@@ -813,6 +813,18 @@
             display: block;
         }
 
+// Lead Stages Configuration
+const LEAD_STAGES = [
+    { name: 'New', color: '#4A90E2', icon: '✨' },
+    { name: 'Contacted', color: '#5BC0DE', icon: '📞' },
+    { name: 'Qualified', color: '#5CB85C', icon: '✅' },
+    { name: 'Proposal Sent', color: '#F0AD4E', icon: '📄' },
+    { name: 'Negotiation', color: '#E8A15D', icon: '💬' },
+    { name: 'Won', color: '#5CB85C', icon: '🎉' },
+    { name: 'Lost', color: '#D9534F', icon: '❌' }
+];
+
+        
         /* Responsive Styles */
         
         /* Tablet View (768px - 1024px) */
@@ -1274,123 +1286,172 @@
         };
 
         // API Service
-        class AppsScriptAPI {
-            constructor(baseUrl) {
-                this.baseUrl = baseUrl;
-            }
+class AppsScriptAPI {
+    constructor(baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
-            async get(action, params = {}) {
-                try {
-                    const url = new URL(this.baseUrl);
-                    url.searchParams.append('action', action);
-                    Object.keys(params).forEach(key => {
-                        url.searchParams.append(key, params[key]);
-                    });
-
-                    const response = await fetch(url, { method: 'GET', redirect: 'follow' });
-                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
-                    
-                    const data = await response.json();
-                    if (!data.success) throw new Error(data.error || 'Request failed');
-                    return data;
-                } catch (error) {
-                    if (error.message.includes('Failed to fetch')) {
-                        throw new Error('Unable to connect to server');
-                    }
-                    throw error;
+    async get(action, params = {}) {
+        try {
+            const url = new URL(this.baseUrl);
+            url.searchParams.append('action', action);
+            Object.keys(params).forEach(key => {
+                if (params[key] !== undefined && params[key] !== null) {
+                    url.searchParams.append(key, params[key]);
                 }
-            }
+            });
 
-            async post(action, data) {
-                try {
-                    const url = `${this.baseUrl}?action=${action}`;
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        redirect: 'follow',
-                        body: JSON.stringify(data)
-                    });
-                    
-                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
-                    const result = await response.json();
-                    if (!result.success) throw new Error(result.error || 'Request failed');
-                    return result;
-                } catch (error) {
-                    if (error.message.includes('Failed to fetch')) {
-                        throw new Error('Unable to connect to server');
-                    }
-                    throw error;
-                }
+            const response = await fetch(url.toString());
+            const data = await response.json();
+            
+            if (!data.success) {
+                throw new Error(data.error || 'API request failed');
             }
-
-            async authenticate(username, password) {
-                return this.get('authenticate', { username, password });
-            }
-
-            async getLeads() {
-                return this.get('getLeads');
-            }
-
-            async getActivities() {
-                return this.get('getActivities');
-            }
-
-            async getFollowUps() {
-                return this.get('getFollowUps');
-            }
-
-            async getTeamPerformance() {
-                return this.get('getTeamPerformance');
-            }
-
-            async addLead(leadData) {
-                return this.post('addLead', leadData);
-            }
-
-            async updateLead(leadData) {
-                return this.post('updateLead', leadData);
-            }
-
-            async addActivity(activityData) {
-                return this.post('addActivity', activityData);
-            }
-
-            async addFollowUp(followUpData) {
-                return this.post('addFollowUp', followUpData);
-            }
-
-            async updateFollowUp(followUpData) {
-                return this.post('updateFollowUp', followUpData);
-            }
-
-            // V4 NEW API METHODS
-            async getUsersList() {
-                return this.get('getUsersList');
-            }
-
-            async getUserProfile(username) {
-                return this.get('getUserProfile', { username });
-            }
-
-            async getLoginHistory(username) {
-                return this.get('getLoginHistory', { username });
-            }
-
-            async updateProfile(profileData) {
-                return this.post('updateProfile', profileData);
-            }
-
-            async changePassword(passwordData) {
-                return this.post('changePassword', passwordData);
-            }
-
-            async sendPasswordResetOTP(data) {
-                return this.post('sendPasswordResetOTP', data);
-            }
-
-            async resetPasswordWithOTP(data) {
-                return this.post('resetPasswordWithOTP', data);
-            }
+            
+            return data;
+        } catch (error) {
+            throw new Error(error.message || 'Network error');
         }
+    }
+
+    async post(action, data) {
+        try {
+            const url = `${this.baseUrl}?action=${action}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.error || 'API request failed');
+            }
+            
+            return result;
+        } catch (error) {
+            throw new Error(error.message || 'Network error');
+        }
+    }
+
+    // Authentication
+    authenticate(username, password) {
+        return this.get('authenticate', { username, password });
+    }
+
+    // Leads
+    getLeads() {
+        return this.get('getLeads');
+    }
+
+    addLead(data) {
+        return this.post('addLead', data);
+    }
+
+    updateLead(data) {
+        return this.post('updateLead', data);
+    }
+
+    assignLead(leadId, assignedTo) {
+        return this.post('assignLead', { leadId, assignedTo });
+    }
+
+    updateLeadStage(leadId, status) {
+        return this.post('updateLeadStage', { leadId, status });
+    }
+
+    convertLeadToCustomer(leadId, createdBy) {
+        return this.post('convertLeadToCustomer', { leadId, createdBy });
+    }
+
+    // Customers (NEW)
+    getCustomers() {
+        return this.get('getCustomers');
+    }
+
+    addCustomer(data) {
+        return this.post('addCustomer', data);
+    }
+
+    updateCustomer(data) {
+        return this.post('updateCustomer', data);
+    }
+
+    // Activities
+    getActivities() {
+        return this.get('getActivities');
+    }
+
+    addActivity(data) {
+        return this.post('addActivity', data);
+    }
+
+    assignActivity(activityId, assignedTo) {
+        return this.post('assignActivity', { activityId, assignedTo });
+    }
+
+    // Follow-ups
+    getFollowUps() {
+        return this.get('getFollowUps');
+    }
+
+    addFollowUp(data) {
+        return this.post('addFollowUp', data);
+    }
+
+    updateFollowUp(data) {
+        return this.post('updateFollowUp', data);
+    }
+
+    assignFollowUp(followUpId, assignedTo) {
+        return this.post('assignFollowUp', { followUpId, assignedTo });
+    }
+
+    // Users
+    getUsersList() {
+        return this.get('getUsersList');
+    }
+
+    getUserProfile(username) {
+        return this.get('getUserProfile', { username });
+    }
+
+    updateUserProfile(data) {
+        return this.post('updateProfile', data);
+    }
+
+    changePassword(data) {
+        return this.post('changePassword', data);
+    }
+
+    // Team
+    getTeamPerformance() {
+        return this.get('getTeamPerformance');
+    }
+
+    // Login History
+    getLoginHistory(username) {
+        return this.get('getLoginHistory', { username });
+    }
+
+    // Password Reset
+    requestPasswordReset(data) {
+        return this.post('requestPasswordReset', data);
+    }
+
+    verifyOTP(email, otp) {
+        return this.get('verifyOTP', { email, otp });
+    }
+
+    resetPassword(data) {
+        return this.post('resetPassword', data);
+    }
+
+    // Config
+    getConfig() {
+        return this.get('getConfig');
+    }
+}
 
         const api = new AppsScriptAPI(APPS_SCRIPT_URL);
 
