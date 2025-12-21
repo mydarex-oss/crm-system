@@ -79,7 +79,24 @@
         .back-link:hover { gap: 8px; color: #357ABD; }
         .otp-input { text-align: center; font-size: 24px; letter-spacing: 8px; font-weight: 600; }
 
-        .form-label
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 16px;
+        }
 
         .form-input, select, textarea {
             width: 100%;
@@ -317,6 +334,12 @@
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .top-bar-left h1 {
@@ -765,19 +788,337 @@
             border-bottom-color: var(--primary);
         }
 
-        /* Responsive */
+        /* Mobile Menu Toggle */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--gray-700);
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        /* Responsive Styles */
+        
+        /* Tablet View (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Mobile View (Below 768px) */
         @media (max-width: 768px) {
+            /* Hide sidebar by default on mobile */
             .sidebar {
-                width: 200px;
+                position: fixed;
+                left: -240px;
+                transition: left 0.3s ease;
+                z-index: 999;
+                width: 240px;
+            }
+
+            .sidebar.active {
+                left: 0;
+                box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+            }
+
+            /* Remove left margin on mobile */
+            .main-content {
+                margin-left: 0;
+            }
+
+            /* Show mobile menu button */
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            /* Top bar adjustments */
+            .top-bar {
+                padding: 12px 16px;
+            }
+
+            .top-bar-left h1 {
+                font-size: 18px;
+            }
+
+            .top-bar-right {
+                gap: 8px;
+            }
+
+            /* Content area */
+            .content-area {
+                padding: 16px;
+            }
+
+            /* Stats grid - single column */
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            /* Charts */
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .chart-card {
+                padding: 16px;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            /* Tables - make scrollable */
+            .table-card {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .table-header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .table-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            /* Modals */
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                margin: 20px auto;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-header {
+                padding: 16px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+
+            .modal-footer {
+                padding: 16px;
+                flex-direction: column-reverse;
+                gap: 8px;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Forms */
+            .form-row {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Toast notifications */
+            .toast-container {
+                top: 60px;
+                right: 10px;
+                left: 10px;
+            }
+
+            .toast {
+                min-width: auto;
+                width: 100%;
+            }
+
+            /* Login page mobile */
+            .login-split {
+                flex-direction: column;
+                margin: 10px;
+            }
+
+            .login-left {
+                padding: 40px 30px;
+                text-align: center;
+                align-items: center;
+            }
+
+            .login-left h2 {
+                font-size: 28px;
+            }
+
+            .login-left p {
+                font-size: 15px;
+            }
+
+            .login-illustration {
+                max-width: 250px;
+            }
+
+            .feature-list {
+                align-items: center;
+            }
+
+            .login-right {
+                padding: 40px 30px;
+            }
+
+            .login-header h1 {
+                font-size: 24px;
+            }
+
+            /* Search bar */
+            .search-bar {
+                max-width: 100%;
+            }
+
+            /* Badges */
+            .badge {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+
+            /* Buttons - stack on mobile when in groups */
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-group .btn {
+                width: 100%;
+            }
+        }
+
+        /* Small Mobile (Below 480px) */
+        @media (max-width: 480px) {
+            .top-bar-left h1 {
+                font-size: 16px;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+
+            .login-left {
+                padding: 30px 20px;
+            }
+
+            .login-right {
+                padding: 30px 20px;
+            }
+
+            .login-left h2 {
+                font-size: 24px;
+            }
+
+            .login-illustration {
+                max-width: 200px;
+            }
+
+            .modal-header h2 {
+                font-size: 18px;
+            }
+
+            th, td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .content-area {
+                padding: 12px;
+            }
+        }
+
+        /* Landscape phone orientation fix */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .login-container {
+                min-height: auto;
+                padding: 20px 0;
+            }
+
+            .login-split {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .login-left {
+                padding: 30px;
+            }
+
+            .login-illustration {
+                max-width: 180px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .top-bar-right,
+            .table-actions,
+            .modal-footer,
+            .toast-container {
+                display: none !important;
             }
 
             .main-content {
-                margin-left: 200px;
+                margin-left: 0;
             }
 
-            .stats-grid,
-            .chart-grid {
-                grid-template-columns: 1fr;
+            .table-card,
+            .chart-card,
+            .stat-card {
+                break-inside: avoid;
             }
         }
     </style>
@@ -1479,6 +1820,7 @@
 
         const Dashboard = ({ user, onLogout, showToast }) => {
             const [activeTab, setActiveTab] = useState('home');
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
             const [data, setData] = useState({
                 leads: [],
                 activities: [],
@@ -1487,6 +1829,12 @@
                 users: []
             });
             const [loading, setLoading] = useState(true);
+
+            // Close mobile menu when tab changes
+            const handleTabChange = (tab) => {
+                setActiveTab(tab);
+                setMobileMenuOpen(false);
+            };
 
             useEffect(() => {
                 loadData();
@@ -1568,7 +1916,10 @@
 
             return (
                 <div className="dashboard">
-                    <div className="sidebar">
+                    {/* Mobile menu overlay */}
+                    <div className={`mobile-overlay ${mobileMenuOpen ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}></div>
+                    
+                    <div className={`sidebar ${mobileMenuOpen ? 'active' : ''}`}>
                         <div className="sidebar-header">
                             <div className="sidebar-logo">
                                 <div className="sidebar-logo-icon">D</div>
@@ -1583,7 +1934,7 @@
                             <div className="nav-section">
                                 <div className="nav-section-title">Main</div>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>
+                                    <div className={`nav-link ${activeTab === 'home' ? 'active' : ''}`} onClick={() => handleTabChange('home')}>
                                         <Icons.Home />
                                         Home
                                     </div>
@@ -1593,19 +1944,19 @@
                             <div className="nav-section">
                                 <div className="nav-section-title">Sales</div>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`} onClick={() => setActiveTab('leads')}>
+                                    <div className={`nav-link ${activeTab === 'leads' ? 'active' : ''}`} onClick={() => handleTabChange('leads')}>
                                         <Icons.Leads />
                                         Leads
                                     </div>
                                 </li>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'activities' ? 'active' : ''}`} onClick={() => setActiveTab('activities')}>
+                                    <div className={`nav-link ${activeTab === 'activities' ? 'active' : ''}`} onClick={() => handleTabChange('activities')}>
                                         <Icons.Activity />
                                         Activities
                                     </div>
                                 </li>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'followups' ? 'active' : ''}`} onClick={() => setActiveTab('followups')}>
+                                    <div className={`nav-link ${activeTab === 'followups' ? 'active' : ''}`} onClick={() => handleTabChange('followups')}>
                                         <Icons.Calendar />
                                         Follow-ups
                                     </div>
@@ -1615,19 +1966,19 @@
                             <div className="nav-section">
                                 <div className="nav-section-title">Insights</div>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => setActiveTab('analytics')}>
+                                    <div className={`nav-link ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => handleTabChange('analytics')}>
                                         <Icons.Chart />
                                         Analytics
                                     </div>
                                 </li>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => setActiveTab('expenses')}>
+                                    <div className={`nav-link ${activeTab === 'expenses' ? 'active' : ''}`} onClick={() => handleTabChange('expenses')}>
                                         <Icons.Dollar />
                                         Expenses
                                     </div>
                                 </li>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'team' ? 'active' : ''}`} onClick={() => setActiveTab('team')}>
+                                    <div className={`nav-link ${activeTab === 'team' ? 'active' : ''}`} onClick={() => handleTabChange('team')}>
                                         <Icons.Team />
                                         Team
                                     </div>
@@ -1637,7 +1988,7 @@
                             <div className="nav-section">
                                 <div className="nav-section-title">Account</div>
                                 <li className="nav-item">
-                                    <div className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
+                                    <div className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => handleTabChange('profile')}>
                                         <Icons.User />
                                         My Profile
                                     </div>
@@ -1648,7 +1999,7 @@
                                 <div className="nav-section">
                                     <div className="nav-section-title">Admin</div>
                                     <li className="nav-item">
-                                        <div className={`nav-link ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+                                        <div className={`nav-link ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => handleTabChange('settings')}>
                                             <Icons.Settings />
                                             Settings
                                         </div>
@@ -1671,6 +2022,13 @@
                     <div className="main-content">
                         <div className="top-bar">
                             <div className="top-bar-left">
+                                <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                                    </svg>
+                                </button>
                                 <h1>{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
                             </div>
                             <div className="top-bar-right">
