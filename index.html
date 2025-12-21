@@ -56,18 +56,18 @@
         }
 
         /* V4 MODERN LOGIN */
-        .login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden; }
-        .login-container::before { content: ''; position: absolute; width: 200%; height: 200%; background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 50px 50px; animation: backgroundMove 20s linear infinite; }
+        .login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); position: relative; overflow: hidden; }
+        .login-container::before { content: ''; position: absolute; width: 200%; height: 200%; background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 30px 30px; animation: backgroundMove 30s linear infinite; }
         @keyframes backgroundMove { 0% { transform: translate(0, 0); } 100% { transform: translate(-50%, -50%); } }
         .login-split { display: flex; width: 100%; max-width: 1100px; margin: 20px; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; z-index: 1; }
-        .login-left { flex: 1; padding: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .login-left h2 { font-size: 32px; margin-bottom: 20px; font-weight: 700; }
-        .login-left p { font-size: 16px; opacity: 0.95; line-height: 1.6; margin-bottom: 40px; }
-        .login-illustration { width: 100%; max-width: 350px; margin: 20px 0; animation: float 3s ease-in-out infinite; }
+        .login-left { flex: 1; padding: 60px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; }
+        .login-left h2 { font-size: 36px; margin-bottom: 16px; font-weight: 700; line-height: 1.2; max-width: 400px; }
+        .login-left p { font-size: 17px; opacity: 0.9; line-height: 1.7; margin-bottom: 40px; max-width: 400px; }
+        .login-illustration { width: 100%; max-width: 350px; margin: 0 0 30px 0; animation: float 3s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
-        .feature-list { text-align: left; margin-top: 20px; }
-        .feature-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; }
-        .feature-item::before { content: '✓'; background: rgba(255,255,255,0.2); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .feature-list { text-align: left; margin-top: 30px; width: 100%; max-width: 400px; }
+        .feature-item { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; font-size: 15px; font-weight: 500; }
+        .feature-item::before { content: '✓'; background: rgba(74, 144, 226, 0.3); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
         .login-right { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
         .login-header { margin-bottom: 40px; }
         .login-header h1 { font-size: 28px; color: #2E3D59; margin-bottom: 8px; }
@@ -1237,14 +1237,13 @@
                         <div className="login-split">
                             <div className="login-left">
                                 <div className="login-illustration">
-                                    <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="250" cy="250" r="200" fill="rgba(255,255,255,0.1)"/>
-                                        <path d="M250 100 L400 250 L250 400 L100 250 Z" fill="rgba(255,255,255,0.2)"/>
-                                        <circle cx="250" cy="250" r="120" fill="rgba(255,255,255,0.15)"/>
+                                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style={{ width: '140px', height: '140px', marginBottom: '40px' }}>
+                                        <circle cx="100" cy="100" r="90" fill="rgba(74, 144, 226, 0.15)" stroke="rgba(74, 144, 226, 0.3)" strokeWidth="2"/>
+                                        <path d="M70 100 L90 120 L130 70" stroke="rgba(74, 144, 226, 0.8)" strokeWidth="8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                 </div>
-                                <h2>Welcome to Darex SalesPulse V4</h2>
-                                <p>Your complete sales coordination platform with powerful insights and seamless team collaboration.</p>
+                                <h2>Sales CRM Made Simple</h2>
+                                <p>Manage your leads, track activities, and close more deals with our powerful, easy-to-use CRM platform.</p>
                                 <div className="feature-list">
                                     <div className="feature-item">Manage leads efficiently</div>
                                     <div className="feature-item">Track activities & follow-ups</div>
@@ -1293,13 +1292,199 @@
             );
         };
 
+        
+        // ========== PROFILE VIEW COMPONENT (V4) ==========
+        const ProfileView = ({ user, showToast, onRefresh }) => {
+            const [editing, setEditing] = useState(false);
+            const [changingPassword, setChangingPassword] = useState(false);
+            const [loginHistory, setLoginHistory] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [formData, setFormData] = useState({
+                fullName: user.fullName,
+                email: user.email,
+                phone: user.phone || '',
+                department: user.department || ''
+            });
+            const [passwordData, setPasswordData] = useState({
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
+
+            useEffect(() => {
+                loadLoginHistory();
+            }, []);
+
+            const loadLoginHistory = async () => {
+                try {
+                    setLoading(true);
+                    const result = await api.getLoginHistory(user.username);
+                    setLoginHistory(result.history || []);
+                } catch (error) {
+                    showToast(error.message, 'error');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleUpdateProfile = async (e) => {
+                e.preventDefault();
+                try {
+                    await api.updateProfile({
+                        username: user.username,
+                        ...formData
+                    });
+                    showToast('Profile updated successfully', 'success');
+                    setEditing(false);
+                    onRefresh();
+                } catch (error) {
+                    showToast(error.message, 'error');
+                }
+            };
+
+            const handleChangePassword = async (e) => {
+                e.preventDefault();
+                
+                if (passwordData.newPassword !== passwordData.confirmPassword) {
+                    showToast('Passwords do not match', 'error');
+                    return;
+                }
+                
+                if (passwordData.newPassword.length < 6) {
+                    showToast('Password must be at least 6 characters', 'error');
+                    return;
+                }
+
+                try {
+                    await api.changePassword({
+                        username: user.username,
+                        currentPassword: passwordData.currentPassword,
+                        newPassword: passwordData.newPassword
+                    });
+                    showToast('Password changed successfully!', 'success');
+                    setChangingPassword(false);
+                    setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                } catch (error) {
+                    showToast(error.message, 'error');
+                }
+            };
+
+            return (
+                <>
+                    <div className="stats-grid">
+                        <div className="stat-card" style={{ gridColumn: 'span 2' }}>
+                            <div className="profile-header">
+                                <div className="profile-avatar">
+                                    <div className="avatar-placeholder">
+                                        {user.fullName.charAt(0).toUpperCase()}
+                                    </div>
+                                </div>
+                                <div className="profile-info">
+                                    <h2>{user.fullName}</h2>
+                                    <p>@{user.username}</p>
+                                    <span className={`badge badge-${user.role}`}>{user.role}</span>
+                                </div>
+                                <button className="btn btn-primary btn-sm" onClick={() => setEditing(!editing)}>
+                                    <Icons.Edit /> {editing ? 'Cancel' : 'Edit Profile'}
+                                </button>
+                            </div>
+
+                            {editing ? (
+                                <form onSubmit={handleUpdateProfile} style={{ marginTop: '24px' }}>
+                                    <div className="form-group">
+                                        <label className="form-label">Full Name</label>
+                                        <input type="text" className="form-input" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Email</label>
+                                        <input type="email" className="form-input" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Phone</label>
+                                        <input type="tel" className="form-input" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Department</label>
+                                        <input type="text" className="form-input" value={formData.department} onChange={(e) => setFormData({...formData, department: e.target.value})} />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Save Changes</button>
+                                </form>
+                            ) : (
+                                <div style={{ marginTop: '24px' }}>
+                                    <div className="profile-detail"><span>Email:</span> {user.email}</div>
+                                    <div className="profile-detail"><span>Phone:</span> {user.phone || 'Not set'}</div>
+                                    <div className="profile-detail"><span>Department:</span> {user.department || 'Not set'}</div>
+                                    <div className="profile-detail"><span>Role:</span> <span className={`badge badge-${user.role}`}>{user.role}</span></div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="stat-card">
+                            <h3 style={{ marginBottom: '16px' }}>Security</h3>
+                            {!changingPassword ? (
+                                <>
+                                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Keep your account secure</p>
+                                    <button className="btn btn-secondary" onClick={() => setChangingPassword(true)}>Change Password</button>
+                                </>
+                            ) : (
+                                <form onSubmit={handleChangePassword}>
+                                    <div className="form-group">
+                                        <label className="form-label">Current Password</label>
+                                        <input type="password" className="form-input" value={passwordData.currentPassword} onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">New Password</label>
+                                        <input type="password" className="form-input" value={passwordData.newPassword} onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Confirm Password</label>
+                                        <input type="password" className="form-input" value={passwordData.confirmPassword} onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})} required />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <button type="submit" className="btn btn-primary">Update</button>
+                                        <button type="button" className="btn btn-secondary" onClick={() => { setChangingPassword(false); setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' }); }}>Cancel</button>
+                                    </div>
+                                </form>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="table-card">
+                        <div className="table-header">
+                            <div className="table-title">Login History (Last 50)</div>
+                            <button className="btn btn-icon" onClick={loadLoginHistory}><Icons.Refresh /></button>
+                        </div>
+                        {loading ? <div className="spinner"></div> : (
+                            <table>
+                                <thead><tr><th>Date</th><th>Time</th><th>Status</th><th>Session Info</th></tr></thead>
+                                <tbody>
+                                    {loginHistory.map((log, idx) => (
+                                        <tr key={idx}>
+                                            <td>{log.date}</td>
+                                            <td>{log.time}</td>
+                                            <td><span className={`badge badge-${log.status === 'success' ? 'successful' : 'failed'}`}>{log.status}</span></td>
+                                            <td>{log.ip}</td>
+                                        </tr>
+                                    ))}
+                                    {loginHistory.length === 0 && (
+                                        <tr><td colSpan="4" className="empty-state"><div className="empty-state-text">No login history available</div></td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </>
+            );
+        };
+
         const Dashboard = ({ user, onLogout, showToast }) => {
             const [activeTab, setActiveTab] = useState('home');
             const [data, setData] = useState({
                 leads: [],
                 activities: [],
                 followUps: [],
-                teamPerformance: []
+                teamPerformance: [],
+                users: []
             });
             const [loading, setLoading] = useState(true);
 
@@ -1328,18 +1513,20 @@
                 try {
                     if (!silent) setLoading(true);
                     
-                    const [leads, activities, followUps, teamPerf] = await Promise.all([
+                    const [leads, activities, followUps, teamPerf, users] = await Promise.all([
                         api.getLeads().catch(() => ({ leads: [] })),
                         api.getActivities().catch(() => ({ activities: [] })),
                         api.getFollowUps().catch(() => ({ followUps: [] })),
-                        api.getTeamPerformance().catch(() => ({ teamPerformance: [] }))
+                        api.getTeamPerformance().catch(() => ({ teamPerformance: [] })),
+                        api.getUsersList().catch(() => ({ users: [] }))
                     ]);
 
                     setData({
                         leads: leads.leads || [],
                         activities: activities.activities || [],
                         followUps: followUps.followUps || [],
-                        teamPerformance: teamPerf.teamPerformance || []
+                        teamPerformance: teamPerf.teamPerformance || [],
+                        users: users.users || []
                     });
                     
                     SessionManager.updateActivity();
@@ -1359,11 +1546,13 @@
                     case 'home':
                         return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'leads':
-                        return <LeadsView leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
+                        return <LeadsView leads={data.leads} users={data.users} user={user} showToast={showToast} onRefresh={loadData} />;
+                    case 'profile':
+                        return <ProfileView user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'activities':
-                        return <ActivitiesView activities={data.activities} leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
+                        return <ActivitiesView activities={data.activities} users={data.users} leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'followups':
-                        return <FollowUpsView followUps={data.followUps} user={user} showToast={showToast} onRefresh={loadData} />;
+                        return <FollowUpsView followUps={data.followUps} users={data.users} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'analytics':
                         return <AnalyticsView data={data} user={user} />;
                     case 'team':
@@ -1441,6 +1630,16 @@
                                     <div className={`nav-link ${activeTab === 'team' ? 'active' : ''}`} onClick={() => setActiveTab('team')}>
                                         <Icons.Team />
                                         Team
+                                    </div>
+                                </li>
+                            </div>
+
+                            <div className="nav-section">
+                                <div className="nav-section-title">Account</div>
+                                <li className="nav-item">
+                                    <div className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
+                                        <Icons.User />
+                                        My Profile
                                     </div>
                                 </li>
                             </div>
@@ -1658,7 +1857,7 @@
         };
 
         // LEADS VIEW - COMPLETE IMPLEMENTATION
-        const LeadsView = ({ leads, user, showToast, onRefresh }) => {
+        const LeadsView = ({ leads, users, user, showToast, onRefresh }) => {
             const [showModal, setShowModal] = useState(false);
             const [editingLead, setEditingLead] = useState(null);
             const [formData, setFormData] = useState({
@@ -1858,13 +2057,20 @@
                                             </select>
                                         </div>
                                         <div className="form-group">
-                                            <label className="form-label">Assignee</label>
-                                            <input
-                                                type="text"
+                                            <label className="form-label">Assignee *</label>
+                                            <select
                                                 className="form-input"
                                                 value={formData.Assignee}
                                                 onChange={(e) => setFormData({...formData, Assignee: e.target.value})}
-                                            />
+                                                required
+                                            >
+                                                <option value="">Select Assignee</option>
+                                                {users.map((u, idx) => (
+                                                    <option key={idx} value={u.fullName}>
+                                                        {u.fullName} ({u.role})
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="form-group">
                                             <label className="form-label">Notes</label>
@@ -1892,7 +2098,7 @@
         };
 
         // ACTIVITIES VIEW - COMPLETE IMPLEMENTATION
-        const ActivitiesView = ({ activities, leads, user, showToast, onRefresh }) => {
+        const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }) => {
             const [showModal, setShowModal] = useState(false);
             const [activeFilter, setActiveFilter] = useState('All');
             const [formData, setFormData] = useState({
@@ -2090,7 +2296,7 @@
         };
 
         // FOLLOW-UPS VIEW - COMPLETE IMPLEMENTATION
-        const FollowUpsView = ({ followUps, user, showToast, onRefresh }) => {
+        const FollowUpsView = ({ followUps, users, user, showToast, onRefresh }) => {
             const [showModal, setShowModal] = useState(false);
             const [editingFollowUp, setEditingFollowUp] = useState(null);
             const [formData, setFormData] = useState({
