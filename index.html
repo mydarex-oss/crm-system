@@ -1914,7 +1914,7 @@ const formatDate = (dateString) => {
                 try {
                     await api.updateProfile({
                         username: user.username,
-                        .....formData
+                        ...formData
                     });
                     showToast('Profile updated successfully', 'success');
                     setEditing(false);
@@ -1975,19 +1975,19 @@ const formatDate = (dateString) => {
                                 <form onSubmit={handleUpdateProfile} style={{ marginTop: '24px' }}>
                                     <div className="form-group">
                                         <label className="form-label">Full Name</label>
-                                        <input type="text" className="form-input" value={formData.fullName} onChange={(e) => setFormData({.....formData, fullName: e.target.value})} />
+                                        <input type="text" className="form-input" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-label">Email</label>
-                                        <input type="email" className="form-input" value={formData.email} onChange={(e) => setFormData({.....formData, email: e.target.value})} />
+                                        <input type="email" className="form-input" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-label">Phone</label>
-                                        <input type="tel" className="form-input" value={formData.phone} onChange={(e) => setFormData({.....formData, phone: e.target.value})} />
+                                        <input type="tel" className="form-input" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-label">Department</label>
-                                        <input type="text" className="form-input" value={formData.department} onChange={(e) => setFormData({.....formData, department: e.target.value})} />
+                                        <input type="text" className="form-input" value={formData.department} onChange={(e) => setFormData({...formData, department: e.target.value})} />
                                     </div>
                                     <button type="submit" className="btn btn-primary">Save Changes</button>
                                 </form>
@@ -2777,7 +2777,7 @@ const formatDate = (dateString) => {
                                                 type="text"
                                                 className="form-input"
                                                 value={formData.Name}
-                                                onChange={(e) => setFormData({.....formData, Name: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Name: e.target.value})}
                                                 required
                                             />
                                         </div>
@@ -2787,7 +2787,7 @@ const formatDate = (dateString) => {
                                                 type="email"
                                                 className="form-input"
                                                 value={formData.Email}
-                                                onChange={(e) => setFormData({.....formData, Email: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Email: e.target.value})}
                                                 required
                                             />
                                         </div>
@@ -2797,7 +2797,7 @@ const formatDate = (dateString) => {
                                                 type="tel"
                                                 className="form-input"
                                                 value={formData.Phone}
-                                                onChange={(e) => setFormData({.....formData, Phone: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Phone: e.target.value})}
                                             />
                                         </div>
                                         <div className="form-group">
@@ -2806,7 +2806,7 @@ const formatDate = (dateString) => {
                                                 type="text"
                                                 className="form-input"
                                                 value={formData.Company}
-                                                onChange={(e) => setFormData({.....formData, Company: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Company: e.target.value})}
                                             />
                                         </div>
                                         <div className="form-group">
@@ -2814,7 +2814,7 @@ const formatDate = (dateString) => {
                                             <select
                                                 className="form-input"
                                                 value={formData.Status}
-                                                onChange={(e) => setFormData({.....formData, Status: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Status: e.target.value})}
                                             >
                                                 <option>New</option>
                                                 <option>Contacted</option>
@@ -2828,7 +2828,7 @@ const formatDate = (dateString) => {
                                             <select
                                                 className="form-input"
                                                 value={formData.Source}
-                                                onChange={(e) => setFormData({.....formData, Source: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Source: e.target.value})}
                                             >
                                                 <option value="">Select source</option>
                                                 <option>Website</option>
@@ -2842,7 +2842,7 @@ const formatDate = (dateString) => {
                                             <select
                                                 className="form-input"
                                                 value={formData.Assignee}
-                                                onChange={(e) => setFormData({.....formData, Assignee: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Assignee: e.target.value})}
                                                 required
                                             >
                                                 <option value="">Select Assignee</option>
@@ -2858,7 +2858,7 @@ const formatDate = (dateString) => {
                                             <textarea
                                                 className="form-input"
                                                 value={formData.Notes}
-                                                onChange={(e) => setFormData({.....formData, Notes: e.target.value})}
+                                                onChange={(e) => setFormData({...formData, Notes: e.target.value})}
                                             ></textarea>
                                         </div>
                                     </div>
@@ -2951,7 +2951,7 @@ const CustomersView = ({ customers, users, user, showToast, onRefresh }) => {
         try {
             if (editingCustomer) {
                 await api.updateCustomer({
-                    .....formData,
+                    ...formData,
                     id: editingCustomer.id,
                     createdBy: editingCustomer.createdBy,
                     createdDate: editingCustomer.createdDate
@@ -2959,7 +2959,7 @@ const CustomersView = ({ customers, users, user, showToast, onRefresh }) => {
                 showToast('Customer updated successfully', 'success');
             } else {
                 await api.addCustomer({
-                    .....formData,
+                    ...formData,
                     createdBy: user.username
                 });
                 showToast('Customer added successfully', 'success');
@@ -3051,44 +3051,44 @@ const CustomersView = ({ customers, users, user, showToast, onRefresh }) => {
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label className="form-label">Name *</label>
-                                        <input type="text" className="form-input" value={formData.name} onChange={(e) => setFormData({.....formData, name: e.target.value})} required />
+                                        <input type="text" className="form-input" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-label">Company *</label>
-                                        <input type="text" className="form-input" value={formData.company} onChange={(e) => setFormData({.....formData, company: e.target.value})} required />
+                                        <input type="text" className="form-input" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} required />
                                     </div>
                                 </div>
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label className="form-label">Email *</label>
-                                        <input type="email" className="form-input" value={formData.email} onChange={(e) => setFormData({.....formData, email: e.target.value})} required />
+                                        <input type="email" className="form-input" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-label">Phone</label>
-                                        <input type="tel" className="form-input" value={formData.phone} onChange={(e) => setFormData({.....formData, phone: e.target.value})} />
+                                        <input type="tel" className="form-input" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Address</label>
-                                    <input type="text" className="form-input" value={formData.address} onChange={(e) => setFormData({.....formData, address: e.target.value})} />
+                                    <input type="text" className="form-input" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
                                 </div>
                                 <div className="form-row">
                                     <div className="form-group">
                                         <label className="form-label">City</label>
-                                        <input type="text" className="form-input" value={formData.city} onChange={(e) => setFormData({.....formData, city: e.target.value})} />
+                                        <input type="text" className="form-input" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} />
                                     </div>
                                     <div className="form-group">
                                         <label className="form-label">Country</label>
-                                        <input type="text" className="form-input" value={formData.country} onChange={(e) => setFormData({.....formData, country: e.target.value})} />
+                                        <input type="text" className="form-input" value={formData.country} onChange={(e) => setFormData({...formData, country: e.target.value})} />
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Industry</label>
-                                    <input type="text" className="form-input" value={formData.industry} onChange={(e) => setFormData({.....formData, industry: e.target.value})} placeholder="e.g., Technology, Healthcare" />
+                                    <input type="text" className="form-input" value={formData.industry} onChange={(e) => setFormData({...formData, industry: e.target.value})} placeholder="e.g., Technology, Healthcare" />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Notes</label>
-                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({.....formData, notes: e.target.value})}></textarea>
+                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})}></textarea>
                                 </div>
                             </div>
                             <div className="modal-footer">
@@ -3163,7 +3163,7 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
         try {
             if (editingActivity) {
                 await api.updateActivity({
-                    .....formData,
+                    ...formData,
                     id: editingActivity.id,
                     createdBy: editingActivity.createdBy,
                     createdDate: editingActivity.createdDate
@@ -3171,7 +3171,7 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
                 showToast('Activity updated', 'success');
             } else {
                 await api.addActivity({
-                    .....formData,
+                    ...formData,
                     createdBy: user.username
                 });
                 showToast('Activity added', 'success');
@@ -3333,7 +3333,7 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
                             <div className="modal-body">
                                 <div className="form-group">
                                     <label className="form-label">Type *</label>
-                                    <select className="form-input" value={formData.type} onChange={(e) => setFormData({.....formData, type: e.target.value})} required>
+                                    <select className="form-input" value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} required>
                                         <option>Call</option>
                                         <option>Meeting</option>
                                         <option>Email</option>
@@ -3341,15 +3341,15 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Subject *</label>
-                                    <input type="text" className="form-input" value={formData.subject} onChange={(e) => setFormData({.....formData, subject: e.target.value})} required />
+                                    <input type="text" className="form-input" value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} required />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Date & Time *</label>
-                                    <input type="datetime-local" className="form-input" value={formData.date} onChange={(e) => setFormData({.....formData, date: e.target.value})} required />
+                                    <input type="datetime-local" className="form-input" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} required />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Status *</label>
-                                    <select className="form-input" value={formData.status} onChange={(e) => setFormData({.....formData, status: e.target.value})} required>
+                                    <select className="form-input" value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})} required>
                                         <option>Pending</option>
                                         <option>Completed</option>
                                         <option>Cancelled</option>
@@ -3357,7 +3357,7 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Assign To</label>
-                                    <select className="form-input" value={formData.assignedTo} onChange={(e) => setFormData({.....formData, assignedTo: e.target.value})}>
+                                    <select className="form-input" value={formData.assignedTo} onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}>
                                         <option value="">Select Assignee</option>
                                         {users && users.map((u, idx) => (
                                             <option key={idx} value={u.username}>{u.fullName}</option>
@@ -3366,7 +3366,7 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Link to Lead</label>
-                                    <select className="form-input" value={formData.leadId} onChange={(e) => setFormData({.....formData, leadId: e.target.value})}>
+                                    <select className="form-input" value={formData.leadId} onChange={(e) => setFormData({...formData, leadId: e.target.value})}>
                                         <option value="">None</option>
                                         {leads && leads.map((l, idx) => (
                                             <option key={idx} value={l.id}>{l.name} - {l.company}</option>
@@ -3375,7 +3375,7 @@ const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Notes</label>
-                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({.....formData, notes: e.target.value})}></textarea>
+                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})}></textarea>
                                 </div>
                             </div>
                             <div className="modal-footer">
@@ -3450,7 +3450,7 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
         try {
             if (editingFollowUp) {
                 await api.updateFollowUp({
-                    .....formData,
+                    ...formData,
                     id: editingFollowUp.id,
                     createdBy: editingFollowUp.createdBy,
                     createdDate: editingFollowUp.createdDate
@@ -3458,7 +3458,7 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
                 showToast('Follow-up updated', 'success');
             } else {
                 await api.addFollowUp({
-                    .....formData,
+                    ...formData,
                     createdBy: user.username
                 });
                 showToast('Follow-up added', 'success');
@@ -3638,19 +3638,19 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
                             <div className="modal-body">
                                 <div className="form-group">
                                     <label className="form-label">Client Name *</label>
-                                    <input type="text" className="form-input" value={formData.clientName} onChange={(e) => setFormData({.....formData, clientName: e.target.value})} required />
+                                    <input type="text" className="form-input" value={formData.clientName} onChange={(e) => setFormData({...formData, clientName: e.target.value})} required />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Due Date & Time *</label>
-                                    <input type="datetime-local" className="form-input" value={formData.dueDate} onChange={(e) => setFormData({.....formData, dueDate: e.target.value})} required />
+                                    <input type="datetime-local" className="form-input" value={formData.dueDate} onChange={(e) => setFormData({...formData, dueDate: e.target.value})} required />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Objective *</label>
-                                    <input type="text" className="form-input" value={formData.objective} onChange={(e) => setFormData({.....formData, objective: e.target.value})} placeholder="What do you want to achieve?" required />
+                                    <input type="text" className="form-input" value={formData.objective} onChange={(e) => setFormData({...formData, objective: e.target.value})} placeholder="What do you want to achieve?" required />
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Priority *</label>
-                                    <select className="form-input" value={formData.priority} onChange={(e) => setFormData({.....formData, priority: e.target.value})} required>
+                                    <select className="form-input" value={formData.priority} onChange={(e) => setFormData({...formData, priority: e.target.value})} required>
                                         <option>High</option>
                                         <option>Medium</option>
                                         <option>Low</option>
@@ -3658,7 +3658,7 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Status</label>
-                                    <select className="form-input" value={formData.status} onChange={(e) => setFormData({.....formData, status: e.target.value})}>
+                                    <select className="form-input" value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})}>
                                         <option>Pending</option>
                                         <option>Completed</option>
                                         <option>Cancelled</option>
@@ -3666,7 +3666,7 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Assign To</label>
-                                    <select className="form-input" value={formData.assignedTo} onChange={(e) => setFormData({.....formData, assignedTo: e.target.value})}>
+                                    <select className="form-input" value={formData.assignedTo} onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}>
                                         <option value="">Select Assignee</option>
                                         {users && users.map((u, idx) => (
                                             <option key={idx} value={u.username}>{u.fullName}</option>
@@ -3675,7 +3675,7 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Link to Lead</label>
-                                    <select className="form-input" value={formData.leadId} onChange={(e) => setFormData({.....formData, leadId: e.target.value})}>
+                                    <select className="form-input" value={formData.leadId} onChange={(e) => setFormData({...formData, leadId: e.target.value})}>
                                         <option value="">None</option>
                                         {leads && leads.map((l, idx) => (
                                             <option key={idx} value={l.id}>{l.name} - {l.company}</option>
@@ -3684,7 +3684,7 @@ const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) 
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Notes</label>
-                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({.....formData, notes: e.target.value})}></textarea>
+                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})}></textarea>
                                 </div>
                             </div>
                             <div className="modal-footer">
