@@ -1133,6 +1133,104 @@ const LEAD_STAGES = [
                 break-inside: avoid;
             }
         }
+.view-toggle {
+    display: flex;
+    gap: 8px;
+    background: var(--gray-100);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.view-toggle button {
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.view-toggle button.active {
+    background: var(--white);
+    color: var(--primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.activity-card, .followup-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    padding: 20px;
+    transition: all 0.2s;
+}
+
+.activity-card:hover, .followup-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.card-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.card-body {
+    margin-bottom: 16px;
+}
+
+.card-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 14px;
+}
+
+.card-detail:last-child {
+    border-bottom: none;
+}
+
+.card-detail-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
     </style>
 </head>
 <body>
@@ -1278,6 +1376,22 @@ const LEAD_STAGES = [
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             ),
+
+            Grid: () => (
+    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+    </svg>
+),
+List: () => (
+    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+    </svg>
+),
+Trash: () => (
+    <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
+),
             User: () => (
                 <svg className="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -1483,6 +1597,41 @@ class AppsScriptAPI {
                 ))}
             </div>
         );
+
+        // Date formatting helper
+const formatDateTime = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'N/A';
+        
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    } catch (error) {
+        return 'N/A';
+    }
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'N/A';
+        
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    } catch (error) {
+        return 'N/A';
+    }
+};
 
         // ForgotPassword Component (V4)
         const ForgotPassword = ({ onBack, showToast }) => {
@@ -1889,6 +2038,7 @@ class AppsScriptAPI {
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
             const [data, setData] = useState({
                 leads: [],
+                customers: [],
                 activities: [],
                 followUps: [],
                 teamPerformance: [],
@@ -1927,22 +2077,23 @@ class AppsScriptAPI {
                 try {
                     if (!silent) setLoading(true);
                     
-                    const [leads, activities, followUps, teamPerf, users] = await Promise.all([
-                        api.getLeads().catch(() => ({ leads: [] })),
-                        api.getActivities().catch(() => ({ activities: [] })),
-                        api.getFollowUps().catch(() => ({ followUps: [] })),
-                        api.getTeamPerformance().catch(() => ({ teamPerformance: [] })),
-                        api.getUsersList().catch(() => ({ users: [] }))
-                    ]);
+              const [leads, customers, activities, followUps, teamPerf, users] = await Promise.all([
+    api.getLeads().catch(() => ({ leads: [] })),
+    api.getCustomers().catch(() => ({ customers: [] })),
+    api.getActivities().catch(() => ({ activities: [] })),
+    api.getFollowUps().catch(() => ({ followUps: [] })),
+    api.getTeamPerformance().catch(() => ({ teamPerformance: [] })),
+    api.getUsersList().catch(() => ({ users: [] }))
+]);
 
-                    setData({
-                        leads: leads.leads || [],
-                        activities: activities.activities || [],
-                        followUps: followUps.followUps || [],
-                        teamPerformance: teamPerf.teamPerformance || [],
-                        users: users.users || []
-                    });
-                    
+               setData({
+    leads: leads.leads || [],
+    customers: customers.customers || [],
+    activities: activities.activities || [],
+    followUps: followUps.followUps || [],
+    teamPerformance: teamPerf.teamPerformance || [],
+    users: users.users || []
+});
                     SessionManager.updateActivity();
                 } catch (error) {
                     if (!silent) {
@@ -1961,12 +2112,15 @@ class AppsScriptAPI {
                         return <HomeView data={data} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'leads':
                         return <LeadsView leads={data.leads} users={data.users} user={user} showToast={showToast} onRefresh={loadData} />;
+
+                    case 'customers':
+    return <CustomersView customers={data.customers} users={data.users} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'profile':
                         return <ProfileView user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'activities':
                         return <ActivitiesView activities={data.activities} users={data.users} leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'followups':
-                        return <FollowUpsView followUps={data.followUps} users={data.users} user={user} showToast={showToast} onRefresh={loadData} />;
+    return <FollowUpsView followUps={data.followUps} users={data.users} leads={data.leads} user={user} showToast={showToast} onRefresh={loadData} />;
                     case 'analytics':
                         return <AnalyticsView data={data} user={user} />;
                     case 'team':
@@ -2015,6 +2169,12 @@ class AppsScriptAPI {
                                         Leads
                                     </div>
                                 </li>
+                                <li className="nav-item">
+        <div className={`nav-link ${activeTab === 'customers' ? 'active' : ''}`} onClick={() => handleTabChange('customers')}>
+            <Icons.User />
+            Customers
+        </div>
+    </li>
                                 <li className="nav-item">
                                     <div className={`nav-link ${activeTab === 'activities' ? 'active' : ''}`} onClick={() => handleTabChange('activities')}>
                                         <Icons.Activity />
@@ -2352,6 +2512,7 @@ class AppsScriptAPI {
                 }
             };
 
+
             return (
                 <>
                     <div className="table-card">
@@ -2521,423 +2682,800 @@ class AppsScriptAPI {
             );
         };
 
-        // ACTIVITIES VIEW - COMPLETE IMPLEMENTATION
-        const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }) => {
-            const [showModal, setShowModal] = useState(false);
-            const [activeFilter, setActiveFilter] = useState('All');
-            const [formData, setFormData] = useState({
-                type: 'Call',
-                clientName: '',
-                date: new Date().toISOString().slice(0, 16),
-                duration: '',
-                outcome: 'Pending',
-                notes: ''
-            });
-            const [saving, setSaving] = useState(false);
+        // CUSTOMERS VIEW COMPONENT
+const CustomersView = ({ customers, users, user, showToast, onRefresh }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [editingCustomer, setEditingCustomer] = useState(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        company: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        country: '',
+        industry: '',
+        notes: ''
+    });
+    const [saving, setSaving] = useState(false);
 
-            const filteredActivities = activeFilter === 'All' 
-                ? activities 
-                : activities.filter(a => a.type === activeFilter);
+    const handleAdd = () => {
+        setEditingCustomer(null);
+        setFormData({
+            name: '',
+            company: '',
+            email: '',
+            phone: '',
+            address: '',
+            city: '',
+            country: '',
+            industry: '',
+            notes: ''
+        });
+        setShowModal(true);
+    };
 
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                setSaving(true);
+    const handleEdit = (customer) => {
+        setEditingCustomer(customer);
+        setFormData({
+            name: customer.name,
+            company: customer.company,
+            email: customer.email,
+            phone: customer.phone,
+            address: customer.address || '',
+            city: customer.city || '',
+            country: customer.country || '',
+            industry: customer.industry || '',
+            notes: customer.notes || ''
+        });
+        setShowModal(true);
+    };
 
-                try {
-                    await api.addActivity({
-                        ...formData,
-                        repId: user.username,
-                        repName: user.fullName
-                    });
-                    showToast('Activity logged successfully', 'success');
-                    setShowModal(false);
-                    setFormData({
-                        type: 'Call',
-                        clientName: '',
-                        date: new Date().toISOString().slice(0, 16),
-                        duration: '',
-                        outcome: 'Pending',
-                        notes: ''
-                    });
-                    onRefresh();
-                } catch (error) {
-                    showToast(error.message, 'error');
-                } finally {
-                    setSaving(false);
-                }
-            };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSaving(true);
 
-            return (
-                <>
-                    <div className="tabs">
-                        {['All', 'Call', 'Meeting', 'Email'].map(tab => (
-                            <button
-                                key={tab}
-                                className={`tab ${activeFilter === tab ? 'active' : ''}`}
-                                onClick={() => setActiveFilter(tab)}
-                            >
-                                {tab} ({tab === 'All' ? activities.length : activities.filter(a => a.type === tab).length})
-                            </button>
-                        ))}
+        try {
+            if (editingCustomer) {
+                await api.updateCustomer({
+                    ...formData,
+                    id: editingCustomer.id,
+                    createdBy: editingCustomer.createdBy,
+                    createdDate: editingCustomer.createdDate
+                });
+                showToast('Customer updated successfully', 'success');
+            } else {
+                await api.addCustomer({
+                    ...formData,
+                    createdBy: user.username
+                });
+                showToast('Customer added successfully', 'success');
+            }
+            setShowModal(false);
+            onRefresh();
+        } catch (error) {
+            showToast(error.message, 'error');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    return (
+        <>
+            <div className="table-card">
+                <div className="table-header">
+                    <div className="table-title">All Customers ({customers.length})</div>
+                    <div className="table-actions">
+                        <button className="btn btn-primary btn-sm" onClick={handleAdd}>
+                            <Icons.Plus /> Add Customer
+                        </button>
                     </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>City</th>
+                            <th>Industry</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {customers.map((customer, idx) => (
+                            <tr key={idx}>
+                                <td>{customer.name}</td>
+                                <td>{customer.company}</td>
+                                <td>{customer.email}</td>
+                                <td>{customer.phone}</td>
+                                <td>{customer.city}</td>
+                                <td>{customer.industry}</td>
+                                <td><span className={`badge badge-${customer.status?.toLowerCase() || 'active'}`}>{customer.status || 'Active'}</span></td>
+                                <td>
+                                    <button className="btn btn-icon" onClick={() => handleEdit(customer)}>
+                                        <Icons.Edit />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        {customers.length === 0 && (
+                            <tr>
+                                <td colSpan="8" className="empty-state">
+                                    <div className="empty-state-text">No customers yet</div>
+                                    <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                                        <Icons.Plus /> Add Your First Customer
+                                    </button>
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
-                    <div className="table-card">
-                        <div className="table-header">
-                            <div className="table-title">Activity Log</div>
-                            <div className="table-actions">
-                                <button className="btn btn-primary btn-sm" onClick={() => setShowModal(true)}>
-                                    <Icons.Plus /> Log Activity
+            {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <div className="modal-title">{editingCustomer ? 'Edit Customer' : 'Add New Customer'}</div>
+                            <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="modal-body">
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Name *</label>
+                                        <input type="text" className="form-input" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Company *</label>
+                                        <input type="text" className="form-input" value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} required />
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Email *</label>
+                                        <input type="email" className="form-input" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Phone</label>
+                                        <input type="tel" className="form-input" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Address</label>
+                                    <input type="text" className="form-input" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">City</label>
+                                        <input type="text" className="form-input" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Country</label>
+                                        <input type="text" className="form-input" value={formData.country} onChange={(e) => setFormData({...formData, country: e.target.value})} />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Industry</label>
+                                    <input type="text" className="form-input" value={formData.industry} onChange={(e) => setFormData({...formData, industry: e.target.value})} placeholder="e.g., Technology, Healthcare" />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Notes</label>
+                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})}></textarea>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="submit" className="btn btn-primary" disabled={saving}>
+                                    {saving ? 'Saving...' : (editingCustomer ? 'Update' : 'Add Customer')}
                                 </button>
                             </div>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Client</th>
-                                    <th>Rep</th>
-                                    <th>Date</th>
-                                    <th>Duration</th>
-                                    <th>Outcome</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredActivities.map((activity, idx) => (
-                                    <tr key={idx}>
-                                        <td><span className={`badge badge-${activity.type?.toLowerCase()}`}>{activity.type}</span></td>
-                                        <td>{activity.clientName || activity.client_name}</td>
-                                        <td>{activity.repName || activity.rep_name}</td>
-                                        <td>{new Date(activity.date).toLocaleDateString()}</td>
-                                        <td>{activity.duration || 0} min</td>
-                                        <td><span className={`badge badge-${activity.outcome?.toLowerCase()}`}>{activity.outcome}</span></td>
-                                        <td>{activity.notes}</td>
-                                    </tr>
-                                ))}
-                                {filteredActivities.length === 0 && (
-                                    <tr>
-                                        <td colSpan="7" className="empty-state">
-                                            <div className="empty-state-text">No activities yet</div>
-                                            <button className="btn btn-primary" onClick={() => setShowModal(true)} style={{ marginTop: '16px' }}>
-                                                <Icons.Plus /> Log Your First Activity
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                        </form>
                     </div>
+                </div>
+            )}
+        </>
+    );
+};
 
-                    {showModal && (
-                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                            <div className="modal" onClick={(e) => e.stopPropagation()}>
-                                <div className="modal-header">
-                                    <div className="modal-title">Log Activity</div>
-                                    <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
-                                </div>
-                                <form onSubmit={handleSubmit}>
-                                    <div className="modal-body">
-                                        <div className="form-group">
-                                            <label className="form-label">Activity Type *</label>
-                                            <select
-                                                className="form-input"
-                                                value={formData.type}
-                                                onChange={(e) => setFormData({...formData, type: e.target.value})}
-                                                required
-                                            >
-                                                <option>Call</option>
-                                                <option>Meeting</option>
-                                                <option>Email</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Client Name *</label>
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                value={formData.clientName}
-                                                onChange={(e) => setFormData({...formData, clientName: e.target.value})}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Date & Time *</label>
-                                            <input
-                                                type="datetime-local"
-                                                className="form-input"
-                                                value={formData.date}
-                                                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Duration (minutes)</label>
-                                            <input
-                                                type="number"
-                                                className="form-input"
-                                                value={formData.duration}
-                                                onChange={(e) => setFormData({...formData, duration: e.target.value})}
-                                                min="0"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Outcome *</label>
-                                            <select
-                                                className="form-input"
-                                                value={formData.outcome}
-                                                onChange={(e) => setFormData({...formData, outcome: e.target.value})}
-                                                required
-                                            >
-                                                <option>Successful</option>
-                                                <option>Pending</option>
-                                                <option>Failed</option>
-                                                <option>FollowUp</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Notes</label>
-                                            <textarea
-                                                className="form-input"
-                                                value={formData.notes}
-                                                onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                                            ></textarea>
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                            Cancel
-                                        </button>
-                                        <button type="submit" className="btn btn-primary" disabled={saving}>
-                                            {saving ? 'Logging...' : 'Log Activity'}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+const ActivitiesView = ({ activities, users, leads, user, showToast, onRefresh }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [editingActivity, setEditingActivity] = useState(null);
+    const [activeFilter, setActiveFilter] = useState('All');
+    const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
+    const [formData, setFormData] = useState({
+        type: 'Call',
+        subject: '',
+        date: new Date().toISOString().slice(0, 16),
+        time: '',
+        status: 'Pending',
+        assignedTo: '',
+        leadId: '',
+        notes: ''
+    });
+    const [saving, setSaving] = useState(false);
+
+    const filteredActivities = activeFilter === 'All' 
+        ? activities 
+        : activities.filter(a => a.type === activeFilter);
+
+    const handleAdd = () => {
+        setEditingActivity(null);
+        setFormData({
+            type: 'Call',
+            subject: '',
+            date: new Date().toISOString().slice(0, 16),
+            time: '',
+            status: 'Pending',
+            assignedTo: '',
+            leadId: '',
+            notes: ''
+        });
+        setShowModal(true);
+    };
+
+    const handleEdit = (activity) => {
+        setEditingActivity(activity);
+        setFormData({
+            type: activity.type || 'Call',
+            subject: activity.subject || '',
+            date: activity.date || new Date().toISOString().slice(0, 16),
+            time: activity.time || '',
+            status: activity.status || 'Pending',
+            assignedTo: activity.assignedTo || '',
+            leadId: activity.leadId || '',
+            notes: activity.notes || ''
+        });
+        setShowModal(true);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+
+        try {
+            if (editingActivity) {
+                await api.updateActivity({
+                    ...formData,
+                    id: editingActivity.id,
+                    createdBy: editingActivity.createdBy,
+                    createdDate: editingActivity.createdDate
+                });
+                showToast('Activity updated', 'success');
+            } else {
+                await api.addActivity({
+                    ...formData,
+                    createdBy: user.username
+                });
+                showToast('Activity added', 'success');
+            }
+            setShowModal(false);
+            onRefresh();
+        } catch (error) {
+            showToast(error.message, 'error');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const renderCards = () => (
+        <div className="cards-grid">
+            {filteredActivities.map((activity, idx) => (
+                <div key={idx} className="activity-card">
+                    <div className="card-header">
+                        <div>
+                            <div className="card-title">{activity.subject}</div>
+                            <div className="card-subtitle">{activity.type}</div>
                         </div>
-                    )}
-                </>
-            );
-        };
+                        <div className="card-actions">
+                            <button className="btn btn-icon" onClick={() => handleEdit(activity)}>
+                                <Icons.Edit />
+                            </button>
+                        </div>
+                    </div>
+                    <div className="card-body">
+                        <div className="card-detail">
+                            <span className="card-detail-label">Date:</span>
+                            <span>{formatDateTime(activity.date)}</span>
+                        </div>
+                        <div className="card-detail">
+                            <span className="card-detail-label">Status:</span>
+                            <span className={`badge badge-${activity.status?.toLowerCase()}`}>{activity.status}</span>
+                        </div>
+                        <div className="card-detail">
+                            <span className="card-detail-label">Assigned:</span>
+                            <span>{activity.assignedTo || 'Unassigned'}</span>
+                        </div>
+                        {activity.leadId && (
+                            <div className="card-detail">
+                                <span className="card-detail-label">Lead:</span>
+                                <span>{leads.find(l => l.id === activity.leadId)?.name || 'Unknown'}</span>
+                            </div>
+                        )}
+                        {activity.notes && (
+                            <div className="card-detail">
+                                <span className="card-detail-label">Notes:</span>
+                                <span>{activity.notes}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))}
+            {filteredActivities.length === 0 && (
+                <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
+                    <div className="empty-state-text">No activities yet</div>
+                    <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                        <Icons.Plus /> Add Your First Activity
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+
+    const renderTable = () => (
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Lead</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {filteredActivities.map((activity, idx) => (
+                    <tr key={idx}>
+                        <td><span className={`badge badge-${activity.type?.toLowerCase()}`}>{activity.type}</span></td>
+                        <td>{activity.subject}</td>
+                        <td>{formatDateTime(activity.date)}</td>
+                        <td><span className={`badge badge-${activity.status?.toLowerCase()}`}>{activity.status}</span></td>
+                        <td>{activity.assignedTo || 'Unassigned'}</td>
+                        <td>{activity.leadId ? (leads.find(l => l.id === activity.leadId)?.name || 'Unknown') : '-'}</td>
+                        <td>
+                            <button className="btn btn-icon" onClick={() => handleEdit(activity)}>
+                                <Icons.Edit />
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+                {filteredActivities.length === 0 && (
+                    <tr>
+                        <td colSpan="7" className="empty-state">
+                            <div className="empty-state-text">No activities yet</div>
+                            <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                                <Icons.Plus /> Add Your First Activity
+                            </button>
+                        </td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
+    );
+
+    return (
+        <>
+            <div className="tabs">
+                {['All', 'Call', 'Meeting', 'Email'].map(tab => (
+                    <button
+                        key={tab}
+                        className={`tab ${activeFilter === tab ? 'active' : ''}`}
+                        onClick={() => setActiveFilter(tab)}
+                    >
+                        {tab} ({tab === 'All' ? activities.length : activities.filter(a => a.type === tab).length})
+                    </button>
+                ))}
+            </div>
+
+            <div className="table-card">
+                <div className="table-header">
+                    <div className="table-title">Activity Log</div>
+                    <div className="table-actions">
+                        <div className="view-toggle">
+                            <button 
+                                className={viewMode === 'cards' ? 'active' : ''}
+                                onClick={() => setViewMode('cards')}
+                            >
+                                <Icons.Grid /> Cards
+                            </button>
+                            <button 
+                                className={viewMode === 'table' ? 'active' : ''}
+                                onClick={() => setViewMode('table')}
+                            >
+                                <Icons.List /> Table
+                            </button>
+                        </div>
+                        <button className="btn btn-primary btn-sm" onClick={handleAdd}>
+                            <Icons.Plus /> Log Activity
+                        </button>
+                    </div>
+                </div>
+                {viewMode === 'cards' ? renderCards() : renderTable()}
+            </div>
+
+            {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <div className="modal-title">{editingActivity ? 'Edit Activity' : 'Log Activity'}</div>
+                            <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label className="form-label">Type *</label>
+                                    <select className="form-input" value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} required>
+                                        <option>Call</option>
+                                        <option>Meeting</option>
+                                        <option>Email</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Subject *</label>
+                                    <input type="text" className="form-input" value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} required />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Date & Time *</label>
+                                    <input type="datetime-local" className="form-input" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} required />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Status *</label>
+                                    <select className="form-input" value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})} required>
+                                        <option>Pending</option>
+                                        <option>Completed</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Assign To</label>
+                                    <select className="form-input" value={formData.assignedTo} onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}>
+                                        <option value="">Select Assignee</option>
+                                        {users && users.map((u, idx) => (
+                                            <option key={idx} value={u.username}>{u.fullName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Link to Lead</label>
+                                    <select className="form-input" value={formData.leadId} onChange={(e) => setFormData({...formData, leadId: e.target.value})}>
+                                        <option value="">None</option>
+                                        {leads && leads.map((l, idx) => (
+                                            <option key={idx} value={l.id}>{l.name} - {l.company}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Notes</label>
+                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})}></textarea>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="submit" className="btn btn-primary" disabled={saving}>
+                                    {saving ? 'Saving...' : (editingActivity ? 'Update' : 'Log')}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
 
         // FOLLOW-UPS VIEW - COMPLETE IMPLEMENTATION
-        const FollowUpsView = ({ followUps, users, user, showToast, onRefresh }) => {
-            const [showModal, setShowModal] = useState(false);
-            const [editingFollowUp, setEditingFollowUp] = useState(null);
-            const [formData, setFormData] = useState({
-                clientName: '',
-                date: new Date().toISOString().slice(0, 16),
-                objective: '',
-                priority: 'Medium',
-                status: 'Pending'
-            });
-            const [saving, setSaving] = useState(false);
+const FollowUpsView = ({ followUps, users, leads, user, showToast, onRefresh }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [editingFollowUp, setEditingFollowUp] = useState(null);
+    const [viewMode, setViewMode] = useState('table');
+    const [formData, setFormData] = useState({
+        clientName: '',
+        dueDate: new Date().toISOString().slice(0, 16),
+        objective: '',
+        priority: 'Medium',
+        status: 'Pending',
+        assignedTo: '',
+        leadId: '',
+        notes: ''
+    });
+    const [saving, setSaving] = useState(false);
 
-            const overdueCount = followUps.filter(f => 
-                f.status === 'Pending' && new Date(f.date) < new Date()
-            ).length;
+    const overdueCount = followUps.filter(f => 
+        f.status === 'Pending' && new Date(f.dueDate || f.date) < new Date()
+    ).length;
 
-            const handleAdd = () => {
-                setEditingFollowUp(null);
-                setFormData({
-                    clientName: '',
-                    date: new Date().toISOString().slice(0, 16),
-                    objective: '',
-                    priority: 'Medium',
-                    status: 'Pending'
+    const handleAdd = () => {
+        setEditingFollowUp(null);
+        setFormData({
+            clientName: '',
+            dueDate: new Date().toISOString().slice(0, 16),
+            objective: '',
+            priority: 'Medium',
+            status: 'Pending',
+            assignedTo: '',
+            leadId: '',
+            notes: ''
+        });
+        setShowModal(true);
+    };
+
+    const handleEdit = (followUp) => {
+        setEditingFollowUp(followUp);
+        setFormData({
+            clientName: followUp.clientName || followUp.client_name || '',
+            dueDate: followUp.dueDate || followUp.date || new Date().toISOString().slice(0, 16),
+            objective: followUp.objective || '',
+            priority: followUp.priority || 'Medium',
+            status: followUp.status || 'Pending',
+            assignedTo: followUp.assignedTo || '',
+            leadId: followUp.leadId || '',
+            notes: followUp.notes || ''
+        });
+        setShowModal(true);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+
+        try {
+            if (editingFollowUp) {
+                await api.updateFollowUp({
+                    ...formData,
+                    id: editingFollowUp.id,
+                    createdBy: editingFollowUp.createdBy,
+                    createdDate: editingFollowUp.createdDate
                 });
-                setShowModal(true);
-            };
-
-            const handleEdit = (followUp) => {
-                setEditingFollowUp(followUp);
-                setFormData({
-                    clientName: followUp.clientName || followUp.client_name,
-                    date: followUp.date,
-                    objective: followUp.objective,
-                    priority: followUp.priority,
-                    status: followUp.status
+                showToast('Follow-up updated', 'success');
+            } else {
+                await api.addFollowUp({
+                    ...formData,
+                    createdBy: user.username
                 });
-                setShowModal(true);
-            };
+                showToast('Follow-up added', 'success');
+            }
+            setShowModal(false);
+            onRefresh();
+        } catch (error) {
+            showToast(error.message, 'error');
+        } finally {
+            setSaving(false);
+        }
+    };
 
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                setSaving(true);
-
-                try {
-                    if (editingFollowUp) {
-                        await api.updateFollowUp({
-                            ...formData,
-                            id: editingFollowUp.id,
-                            rowIndex: editingFollowUp.rowIndex,
-                            repId: editingFollowUp.repId || editingFollowUp.rep_id,
-                            repName: editingFollowUp.repName || editingFollowUp.rep_name
-                        });
-                        showToast('Follow-up updated successfully', 'success');
-                    } else {
-                        await api.addFollowUp({
-                            ...formData,
-                            repId: user.username,
-                            repName: user.fullName
-                        });
-                        showToast('Follow-up scheduled successfully', 'success');
-                    }
-                    setShowModal(false);
-                    onRefresh();
-                } catch (error) {
-                    showToast(error.message, 'error');
-                } finally {
-                    setSaving(false);
-                }
-            };
-
-            return (
-                <>
-                    {overdueCount > 0 && (
-                        <div className="alert alert-error" style={{ marginBottom: '20px' }}>
-                            <Icons.XCircle />
-                            You have {overdueCount} overdue follow-up{overdueCount > 1 ? 's' : ''}!
-                        </div>
-                    )}
-
-                    <div className="table-card">
-                        <div className="table-header">
-                            <div className="table-title">Follow-ups ({followUps.length})</div>
-                            <div className="table-actions">
-                                <button className="btn btn-primary btn-sm" onClick={handleAdd}>
-                                    <Icons.Plus /> Schedule Follow-up
+    const renderCards = () => (
+        <div className="cards-grid">
+            {followUps.map((followUp, idx) => {
+                const isOverdue = followUp.status === 'Pending' && 
+                    new Date(followUp.dueDate || followUp.date) < new Date();
+                
+                return (
+                    <div key={idx} className="followup-card" 
+                        style={{ background: isOverdue ? 'rgba(217, 83, 79, 0.05)' : 'white' }}>
+                        <div className="card-header">
+                            <div>
+                                <div className="card-title">{followUp.clientName || followUp.client_name}</div>
+                                <div className="card-subtitle">{followUp.objective}</div>
+                            </div>
+                            <div className="card-actions">
+                                <button className="btn btn-icon" onClick={() => handleEdit(followUp)}>
+                                    <Icons.Edit />
                                 </button>
                             </div>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Date</th>
-                                    <th>Objective</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th>Rep</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {followUps.map((followUp, idx) => {
-                                    const isOverdue = followUp.status === 'Pending' && new Date(followUp.date) < new Date();
-                                    return (
-                                        <tr key={idx} style={{ background: isOverdue ? 'rgba(217, 83, 79, 0.05)' : 'transparent' }}>
-                                            <td>{followUp.clientName || followUp.client_name}</td>
-                                            <td>
-                                                {new Date(followUp.date).toLocaleDateString()} {new Date(followUp.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                                {isOverdue && <span style={{color: 'var(--danger)', marginLeft: '8px', fontWeight: '600'}}>OVERDUE</span>}
-                                            </td>
-                                            <td>{followUp.objective}</td>
-                                            <td><span className={`badge badge-${followUp.priority?.toLowerCase()}`}>{followUp.priority}</span></td>
-                                            <td><span className={`badge badge-${followUp.status?.toLowerCase()}`}>{followUp.status}</span></td>
-                                            <td>{followUp.repName || followUp.rep_name}</td>
-                                            <td>
-                                                <button className="btn btn-icon" onClick={() => handleEdit(followUp)}>
-                                                    <Icons.Edit />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                                {followUps.length === 0 && (
-                                    <tr>
-                                        <td colSpan="7" className="empty-state">
-                                            <div className="empty-state-text">No follow-ups scheduled</div>
-                                            <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
-                                                <Icons.Plus /> Schedule Your First Follow-up
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {showModal && (
-                        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                            <div className="modal" onClick={(e) => e.stopPropagation()}>
-                                <div className="modal-header">
-                                    <div className="modal-title">{editingFollowUp ? 'Edit Follow-up' : 'Schedule Follow-up'}</div>
-                                    <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
-                                </div>
-                                <form onSubmit={handleSubmit}>
-                                    <div className="modal-body">
-                                        <div className="form-group">
-                                            <label className="form-label">Client Name *</label>
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                value={formData.clientName}
-                                                onChange={(e) => setFormData({...formData, clientName: e.target.value})}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Date & Time *</label>
-                                            <input
-                                                type="datetime-local"
-                                                className="form-input"
-                                                value={formData.date}
-                                                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Objective *</label>
-                                            <input
-                                                type="text"
-                                                className="form-input"
-                                                value={formData.objective}
-                                                onChange={(e) => setFormData({...formData, objective: e.target.value})}
-                                                placeholder="What do you want to achieve?"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Priority *</label>
-                                            <select
-                                                className="form-input"
-                                                value={formData.priority}
-                                                onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                                                required
-                                            >
-                                                <option>High</option>
-                                                <option>Medium</option>
-                                                <option>Low</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group">
-                                            <label className="form-label">Status</label>
-                                            <select
-                                                className="form-input"
-                                                value={formData.status}
-                                                onChange={(e) => setFormData({...formData, status: e.target.value})}
-                                            >
-                                                <option>Pending</option>
-                                                <option>Completed</option>
-                                                <option>Cancelled</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                            Cancel
-                                        </button>
-                                        <button type="submit" className="btn btn-primary" disabled={saving}>
-                                            {saving ? 'Saving...' : (editingFollowUp ? 'Update' : 'Schedule')}
-                                        </button>
-                                    </div>
-                                </form>
+                        <div className="card-body">
+                            <div className="card-detail">
+                                <span className="card-detail-label">Due Date:</span>
+                                <span>
+                                    {formatDateTime(followUp.dueDate || followUp.date)}
+                                    {isOverdue && <span style={{color: 'var(--danger)', marginLeft: '8px', fontWeight: '600'}}>OVERDUE</span>}
+                                </span>
                             </div>
+                            <div className="card-detail">
+                                <span className="card-detail-label">Priority:</span>
+                                <span className={`badge badge-${followUp.priority?.toLowerCase()}`}>{followUp.priority}</span>
+                            </div>
+                            <div className="card-detail">
+                                <span className="card-detail-label">Status:</span>
+                                <span className={`badge badge-${followUp.status?.toLowerCase()}`}>{followUp.status}</span>
+                            </div>
+                            <div className="card-detail">
+                                <span className="card-detail-label">Assigned:</span>
+                                <span>{followUp.assignedTo || 'Unassigned'}</span>
+                            </div>
+                            {followUp.leadId && (
+                                <div className="card-detail">
+                                    <span className="card-detail-label">Lead:</span>
+                                    <span>{leads.find(l => l.id === followUp.leadId)?.name || 'Unknown'}</span>
+                                </div>
+                            )}
+                            {followUp.notes && (
+                                <div className="card-detail">
+                                    <span className="card-detail-label">Notes:</span>
+                                    <span>{followUp.notes}</span>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </>
-            );
-        };
+                    </div>
+                );
+            })}
+            {followUps.length === 0 && (
+                <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
+                    <div className="empty-state-text">No follow-ups scheduled</div>
+                    <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                        <Icons.Plus /> Schedule Your First Follow-up
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+
+    const renderTable = () => (
+        <table>
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Due Date</th>
+                    <th>Objective</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Lead</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {followUps.map((followUp, idx) => {
+                    const isOverdue = followUp.status === 'Pending' && 
+                        new Date(followUp.dueDate || followUp.date) < new Date();
+                    
+                    return (
+                        <tr key={idx} style={{ background: isOverdue ? 'rgba(217, 83, 79, 0.05)' : 'transparent' }}>
+                            <td>{followUp.clientName || followUp.client_name}</td>
+                            <td>
+                                {formatDateTime(followUp.dueDate || followUp.date)}
+                                {isOverdue && <span style={{color: 'var(--danger)', marginLeft: '8px', fontWeight: '600'}}>OVERDUE</span>}
+                            </td>
+                            <td>{followUp.objective}</td>
+                            <td><span className={`badge badge-${followUp.priority?.toLowerCase()}`}>{followUp.priority}</span></td>
+                            <td><span className={`badge badge-${followUp.status?.toLowerCase()}`}>{followUp.status}</span></td>
+                            <td>{followUp.assignedTo || 'Unassigned'}</td>
+                            <td>{followUp.leadId ? (leads.find(l => l.id === followUp.leadId)?.name || 'Unknown') : '-'}</td>
+                            <td>
+                                <button className="btn btn-icon" onClick={() => handleEdit(followUp)}>
+                                    <Icons.Edit />
+                                </button>
+                            </td>
+                        </tr>
+                    );
+                })}
+                {followUps.length === 0 && (
+                    <tr>
+                        <td colSpan="8" className="empty-state">
+                            <div className="empty-state-text">No follow-ups scheduled</div>
+                            <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                                <Icons.Plus /> Schedule Your First Follow-up
+                            </button>
+                        </td>
+                    </tr>
+                )}
+            </tbody>
+        </table>
+    );
+
+    return (
+        <>
+            {overdueCount > 0 && (
+                <div className="alert alert-error" style={{ marginBottom: '20px' }}>
+                    <Icons.XCircle />
+                    You have {overdueCount} overdue follow-up{overdueCount > 1 ? 's' : ''}!
+                </div>
+            )}
+
+            <div className="table-card">
+                <div className="table-header">
+                    <div className="table-title">Follow-ups ({followUps.length})</div>
+                    <div className="table-actions">
+                        <div className="view-toggle">
+                            <button 
+                                className={viewMode === 'cards' ? 'active' : ''}
+                                onClick={() => setViewMode('cards')}
+                            >
+                                <Icons.Grid /> Cards
+                            </button>
+                            <button 
+                                className={viewMode === 'table' ? 'active' : ''}
+                                onClick={() => setViewMode('table')}
+                            >
+                                <Icons.List /> Table
+                            </button>
+                        </div>
+                        <button className="btn btn-primary btn-sm" onClick={handleAdd}>
+                            <Icons.Plus /> Schedule Follow-up
+                        </button>
+                    </div>
+                </div>
+                {viewMode === 'cards' ? renderCards() : renderTable()}
+            </div>
+
+            {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <div className="modal-title">{editingFollowUp ? 'Edit Follow-up' : 'Schedule Follow-up'}</div>
+                            <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label className="form-label">Client Name *</label>
+                                    <input type="text" className="form-input" value={formData.clientName} onChange={(e) => setFormData({...formData, clientName: e.target.value})} required />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Due Date & Time *</label>
+                                    <input type="datetime-local" className="form-input" value={formData.dueDate} onChange={(e) => setFormData({...formData, dueDate: e.target.value})} required />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Objective *</label>
+                                    <input type="text" className="form-input" value={formData.objective} onChange={(e) => setFormData({...formData, objective: e.target.value})} placeholder="What do you want to achieve?" required />
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Priority *</label>
+                                    <select className="form-input" value={formData.priority} onChange={(e) => setFormData({...formData, priority: e.target.value})} required>
+                                        <option>High</option>
+                                        <option>Medium</option>
+                                        <option>Low</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Status</label>
+                                    <select className="form-input" value={formData.status} onChange={(e) => setFormData({...formData, status: e.target.value})}>
+                                        <option>Pending</option>
+                                        <option>Completed</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Assign To</label>
+                                    <select className="form-input" value={formData.assignedTo} onChange={(e) => setFormData({...formData, assignedTo: e.target.value})}>
+                                        <option value="">Select Assignee</option>
+                                        {users && users.map((u, idx) => (
+                                            <option key={idx} value={u.username}>{u.fullName}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Link to Lead</label>
+                                    <select className="form-input" value={formData.leadId} onChange={(e) => setFormData({...formData, leadId: e.target.value})}>
+                                        <option value="">None</option>
+                                        {leads && leads.map((l, idx) => (
+                                            <option key={idx} value={l.id}>{l.name} - {l.company}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Notes</label>
+                                    <textarea className="form-input" value={formData.notes} onChange={(e) => setFormData({...formData, notes: e.target.value})}></textarea>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                                <button type="submit" className="btn btn-primary" disabled={saving}>
+                                    {saving ? 'Saving...' : (editingFollowUp ? 'Update' : 'Schedule')}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
 
         // ANALYTICS VIEW - COMPLETE IMPLEMENTATION
         const AnalyticsView = ({ data }) => {
