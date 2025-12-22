@@ -1521,6 +1521,27 @@ class AppsScriptAPI {
         return this.post('assignFollowUp', { followUpId, assignedTo });
     }
 
+    // Delete operations
+deleteLead(data) {
+    return this.post('deleteLead', data);
+}
+
+deleteCustomer(data) {
+    return this.post('deleteCustomer', data);
+}
+
+deleteActivity(data) {
+    return this.post('deleteActivity', data);
+}
+
+deleteFollowUp(data) {
+    return this.post('deleteFollowUp', data);
+}
+
+updateActivity(data) {
+    return this.post('updateActivity', data);
+}
+
     // Users
     getUsersList() {
         return this.get('getUsersList');
@@ -2486,32 +2507,202 @@ const formatDate = (dateString) => {
                 setShowModal(true);
             };
 
-            const handleSubmit = async (e) => {
-                e.preventDefault();
-                setSaving(true);
+           const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
 
-                try {
-                    if (editingLead) {
-                        await api.updateLead({
-                            ...formData,
-                            id: editingLead.id,
-                            rowIndex: editingLead.rowIndex,
-                            created_date: editingLead.created_date
-                        });
-                        showToast('Lead updated successfully', 'success');
-                    } else {
-                        await api.addLead(formData);
-                        showToast('Lead added successfully', 'success');
-                    }
-                    setShowModal(false);
-                    onRefresh();
-                } catch (error) {
-                    showToast(error.message, 'error');
-                } finally {
-                    setSaving(false);
-                }
-            };
+    // ADD THIS DELETE HANDLER
+    const handleDelete = async (lead) => {
+        if (!user.permissions?.delete) {
+            showToast('You do not have permission to delete', 'error');
+            return;
+        }
+        
+        if (!confirm(`Delete lead "${lead.name}"?`)) return;
+        
+        try {
+            await api.deleteLead({ id: lead.id, userRole: user.role });
+            showToast('Lead deleted successfully', 'success');
+            onRefresh();
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
+    };
 
+    // ADD THIS KANBAN RENDER
+    const renderKanban = () => {
+        const stages = ['New', 'Contacted', 'Qualified', 'Proposal Sent', 'Negotiation', 'Won', 'Lost'];
+        
+        return (
+            <div style={{ display: 'flex', gap: '16px', overflowX: 'auto', padding: '20px' }}>
+                {stages.map(stage => {
+                    const stageLeads = leads.filter(l => l.status === stage);
+                    return (
+                        <div key={stage} style={{ minWidth: '300px', background: 'var(--gray-50)', borderRadius: '6px', padding: '16px' }}>
+                            <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <h3 style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    {stage}
+                                </h3>
+                                <span style={{ background: 'var(--primary)', color: 'white', borderRadius: '12px', padding: '2px 8px', fontSize: '12px', fontWeight: '600' }}>
+                                    {stageLeads.length}
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                {stageLeads.map(lead => (
+                                    <div key={lead.id} style={{ background: 'white', borderRadius: '6px', padding: '16px', border: '1px solid var(--gray-200)', cursor: 'pointer' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                            <div style={{ fontWeight: '600', fontSize: '14px' }}>{lead.name}</div>
+                                            <div style={{ display: 'flex', gap: '4px' }}>
+                                                <button className="btn btn-icon" onClick={(e) => { e.stopPropagation(); handleEdit(lead); }}>
+                                                    <Icons.Edit />
+                                                </button>
+                                                {user.permissions?.delete && (
+                                                    <button className="btn btn-icon" style={{ color: 'var(--danger)' }} onClick={(e) => { e.stopPropagation(); handleDelete(lead); }}>
+                                                        <Icons.Trash />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{lead.company}</div>
+                                        <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                                            {lead.assignee ? `Assigned: ${lead.assignee}` : 'Unassigned'}
+                                        </div>
+                                    </div>
+                                ))}
+                                {stageLeads.length === 0 && (
+                                    <div style={{ textAlign: 'center', padding: '20px', color: 'var(--text-secondary)', fontSize: '13px' }}>
+                                        No leads in this stage
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
+    // MODIFY THE RETURN STATEMENT
+    return (
+        <>
+            {/* ADD TABS */}
+            <div className="tabs">
+                <button className={`tab ${viewMode === 'table' ? 'active' : ''}`} onClick={() => setViewMode('table')}>
+                    <Icons.List /> Table View
+                </button>
+                <button className={`tab ${viewMode === 'kanban' ? 'active' : ''}`} onClick={() => setViewMode('kanban')}>
+                    <Icons.Grid /> Kanban Board
+                </button>
+            </div>
+
+            {/* CONDITIONAL RENDER */}
+            {viewMode === 'kanban' ? (
+                renderKanban()
+            ) : (
+                <div className="table-card">
+                    {/* EXISTING TABLE CODE */}
+                    <div className="table-header">
+                        <div className="table-title">All Leads ({leads.length})</div>
+                        <div className="table-actions">
+                            <button className="btn btn-primary btn-sm" onClick={handleAdd}>
+                                <Icons.Plus /> Add Lead
+                            </button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Company</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Assignee</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {leads.map((lead, idx) => (
+                                <tr key={idx}>
+                                    <td>{lead.name}</td>
+                                    <td>{lead.company}</td>
+                                    <td>{lead.email}</td>
+                                    <td>{lead.phone}</td>
+                                    <td><span className={`badge badge-${lead.status?.toLowerCase()}`}>{lead.status}</span></td>
+                                    <td>{lead.assignee}</td>
+                                    <td>
+                                        <button className="btn btn-icon" onClick={() => handleEdit(lead)}>
+                                            <Icons.Edit />
+                                        </button>
+                                        {user.permissions?.delete && (
+                                            <button className="btn btn-icon" style={{ color: 'var(--danger)' }} onClick={() => handleDelete(lead)}>
+                                                <Icons.Trash />
+                                            </button>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                            {leads.length === 0 && (
+                                <tr>
+                                    <td colSpan="7" className="empty-state">
+                                        <div className="empty-state-text">No leads yet</div>
+                                        <button className="btn btn-primary" onClick={handleAdd} style={{ marginTop: '16px' }}>
+                                            <Icons.Plus /> Add Your First Lead
+                                        </button>
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {/* EXISTING MODAL CODE */}
+            {showModal && (
+                // ... modal code stays the same ...
+            )}
+        </>
+    );
+};
+
+               
+    try {
+        if (editingLead) {
+            await api.updateLead({
+                id: editingLead.id,
+                name: formData.Name,      // Changed from Name to name
+                email: formData.Email,    // etc.
+                phone: formData.Phone,
+                company: formData.Company,
+                status: formData.Status,
+                source: formData.Source,
+                assignedTo: formData.Assignee,
+                notes: formData.Notes,
+                createdDate: editingLead.createdDate
+            });
+            showToast('Lead updated successfully', 'success');
+        } else {
+            await api.addLead({
+                name: formData.Name,
+                email: formData.Email,
+                phone: formData.Phone,
+                company: formData.Company,
+                status: formData.Status,
+                source: formData.Source,
+                assignedTo: formData.Assignee,
+                notes: formData.Notes,
+                createdBy: user.username
+            });
+            showToast('Lead added successfully', 'success');
+        }
+        setShowModal(false);
+        onRefresh();
+    } catch (error) {
+        showToast(error.message, 'error');
+    } finally {
+        setSaving(false);
+    }
+};
 
             return (
                 <>
@@ -2731,6 +2922,23 @@ const CustomersView = ({ customers, users, user, showToast, onRefresh }) => {
         setShowModal(true);
     };
 
+    const handleDelete = async (customer) => {
+    if (!user.permissions?.delete) {
+        showToast('You do not have permission to delete', 'error');
+        return;
+    }
+    
+    if (!confirm(`Delete customer "${customer.name}"?`)) return;
+    
+    try {
+        await api.deleteCustomer({ id: customer.id, userRole: user.role });
+        showToast('Customer deleted successfully', 'success');
+        onRefresh();
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+};
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSaving(true);
@@ -2809,6 +3017,17 @@ const CustomersView = ({ customers, users, user, showToast, onRefresh }) => {
                                         <Icons.Plus /> Add Your First Customer
                                     </button>
                                 </td>
+
+                                <td>
+    <button className="btn btn-icon" onClick={() => handleEdit(customer)}>
+        <Icons.Edit />
+    </button>
+    {user.permissions?.delete && (
+        <button className="btn btn-icon" style={{ color: 'var(--danger)' }} onClick={() => handleDelete(customer)}>
+            <Icons.Trash />
+        </button>
+    )}
+</td>
                             </tr>
                         )}
                     </tbody>
